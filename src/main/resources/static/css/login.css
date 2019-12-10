@@ -1,0 +1,282 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+}
+a {
+    text-decoration: none;
+}
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+    color: #555;
+    font-size: 14px;
+}
+
+input:-moz-placeholder, textarea:-moz-placeholder {
+    color: #555;
+    font-size: 14px;
+}
+
+input::-moz-placeholder, textarea::-moz-placeholder {
+    color: #555;
+    font-size: 14px;
+}
+
+input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+    color: #555;
+    font-size: 14px;
+}
+
+body {
+    min-height: 630px;
+    /*background: url("../img/login/email-pattern.png") repeat;*/
+    background-color: rgba(246, 246, 246, 1);
+}
+
+#container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    color: rgba(255, 255, 255, 1);
+    overflow: hidden;
+    /* 锯齿
+     background-image: linear-gradient(45deg,rgba(246,246,246,100%) 25%,transparent 25%),linear-gradient(-45deg,rgba(246,246,246,100%) 25%,transparent 25%);
+     background-size: 20px 20px;
+     background-repeat: repeat-x;
+     background-position: 0 100%; */
+}
+
+#website-icon {
+    position: relative;
+    display: block;
+    width: fit-content;
+    line-height: 80px;
+    padding-left: 30px;
+    margin-top: 20px;
+    color: rgba(66, 211, 132, .83);
+    text-align: left;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+}
+.icon-7 {
+    font-size: 60px;
+}
+#website-icon em {
+    margin-left: 10px;
+    font-size: 40px;
+    font-style: normal;
+    color: rgba(66, 211, 132, .83);
+}
+
+#visitor {
+    position: absolute;
+    top: 25px;
+    right: -50px;
+    width: 160px;
+    line-height: 25px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    background-color: rgba(66, 211, 132, .83);
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+    transform: rotate(45deg);
+}
+/*=============================*/
+#login-reg-box{
+    position: absolute;
+    top: 50%;
+    right: 180px;
+    width: 300px;
+    margin-top: -180px;
+    border-radius: 2px;
+    border: solid 1px rgba(220, 220, 220, 1);
+    color: rgba(54, 58, 57, 1);
+    background-color: rgba(255, 255, 255, 1);
+}
+#login-reg-tab-title{
+    height: 50px;
+    line-height: 50px;
+    border-bottom: none;
+    text-align: center;
+}
+/*登录*/
+#input-area {
+    width: 100%;
+    padding: 0 40px 10px 40px;
+}
+.input-parent {
+    display: block;
+    position: relative;
+}
+.input {
+    display: block;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    margin: 15px auto;
+    border: solid 1px #c8c8c8;
+    border-radius: 5px;
+    text-indent: 5px;
+    outline: none;
+    background-color: inherit;
+}
+.other {
+    display: inline-block;
+    padding: 0 5px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 12px;
+    color: rgba(54, 58, 57, 1);
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+}
+.other input[type="checkbox"] {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+#forgot-pwd {
+    float: right;
+    color: rgba(121, 158, 232, .91);
+}
+
+#login-btn {
+    display: block;
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    margin: 10px auto 0;
+    border: none;
+    border-radius: 17.5px;
+    text-align: center;
+    letter-spacing: 10px;
+    text-indent: 10px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(66, 211, 132, .83);
+    cursor: pointer;
+    outline: none;
+}
+
+#third-login{
+    width: 100%;
+    font-size: 14px;
+    text-align: center;
+}
+#third-login-title{
+    display: block;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 13px;
+}
+#third-login ul{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 40px;
+    margin: 5px 0;
+}
+#third-login ul li{
+    display: block;
+}
+#third-login ul li a{
+    display: block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    margin: 0 20px;
+    border-radius: 50%;
+    border: solid 1px rgba(220, 220, 220, 1);
+    text-align: center;
+    cursor: pointer;
+}
+.third-login-icon{
+    margin: 6px 0;
+    font-size: 26px;
+}
+/*注册*/
+#reg-input-area {
+    width: 100%;
+    padding: 0 40px 10px 40px;
+}
+.reg-input {
+    display: block;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    margin: 15px auto;
+    border: solid 1px #c8c8c8;
+    border-radius: 5px;
+    outline: none;
+    text-indent: 32px;
+    color: rgba(54, 58, 57, 1);
+}
+#username {
+    background: url("../img/login/phone.png") no-repeat 8px;
+}
+#nickname {
+    background: url("../img/login/user.png") no-repeat 8px;
+}
+#password {
+    background: url("../img/login/key.png") no-repeat 8px;
+}
+/* 设置修改注册模块input内容文字的样式*/
+.reg-input::-webkit-input-placeholder {
+    color: #363a39;
+    font-size: 14px;
+}
+.reg-input:-moz-placeholder {
+    color: rgba(54, 58, 57, 1);
+    font-size: 14px;
+}
+.reg-input::-moz-placeholder {
+    color: rgba(54, 58, 57, 1);
+    font-size: 14px;
+}
+input:-ms-input-placeholder {
+    color: rgba(54, 58, 57, 1);
+    font-size: 14px;
+}
+#vali-code {
+    display: inline-block;
+    width: 55%;
+    margin: 0;
+    background: url("../img/login/confirm.png") no-repeat 8px;
+}
+#vali-code-img {
+    float: right;
+    display: block;
+    width: 40%;
+    margin-left: 5%;
+    height: 40px;
+
+    cursor: pointer;
+}
+#register-btn {
+    display: block;
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    margin: 20px auto 0;
+    border: none;
+    border-radius: 17.5px;
+    text-align: center;
+    letter-spacing: 10px;
+    text-indent: 10px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(66, 211, 132, .7);
+    cursor: pointer;
+    outline: none;
+}
+#register-btn:hover {
+    background-color: rgba(66, 211, 132, .83);
+}
+/*=============================*/

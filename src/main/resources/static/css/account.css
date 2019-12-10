@@ -1,0 +1,280 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+a {
+    text-decoration: none;
+}
+body {
+    background-color: #F4F5F7;
+}
+/*导航栏*/
+#header {
+    width: 100%;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+}
+#menu{
+    padding: 0 calc((100% - 1080px) / 2);
+}
+
+#container {
+    position: relative;
+    width: 1080px;
+    padding-right: 296px;
+    margin: 16px auto;
+}
+
+#account, #follow {
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+    background-color: rgba(255, 255, 255, 1);
+}
+/*标题*/
+.func-headline {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+}
+.func-headline h2 {
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    padding-left: 10px;
+    border-bottom: solid 2px rgba(220, 220, 220, 1);
+    color: rgba(54, 58, 57, 1);
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+.func-headline h2 span {
+    margin-right: 3px;
+    font-size: 20px;
+    color: rgba(0, 133, 235, 1);
+}
+.func-headline h2 em {
+    font-style: normal;
+}
+/*修改按钮*/
+#edit-account-info {
+    float: right;
+    display: block;
+    line-height: 25px;
+    padding: 0 10px;
+    margin: 5px 0;
+    font-size: 12px;
+    color: #5FB878;
+    text-align: center;
+    cursor: pointer;
+}
+/*我的账号信息*/
+#accountInfo {
+    position: relative;
+    width: 100%;
+    font-size: 15px;
+}
+#basicInfo {
+    width: 50%;
+    padding: 0 20px 0 10px;
+    border-right: solid 1px rgba(196, 196, 196, .7);
+    color: rgba(54, 58, 57, 1);
+}
+/*头像*/
+#profileItem {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: left;
+}
+#profileText {
+    float: left;
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    margin: 10px;
+}
+#profileItem img {
+    float: right;
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: 5px 10px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+    cursor: pointer;
+}
+
+.accountItems {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border-top: solid 1px rgba(196, 196, 196, .7);
+}
+.itemname {
+    float: left;
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    margin: 5px 10px;
+    letter-spacing: 1px;
+}
+.itemInfo {
+    width: 180px;
+    float: right;
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    margin: 5px 10px 5px 10px;
+    text-align: right;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.account-icon {
+    float: right;
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    margin: 5px 10px 5px 10px;
+    text-align: center;
+}
+/*开关*/
+.layui-form-switch {
+    width: 74px;
+    height: 24px;
+}
+/*总结*/
+#achievement {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    font-size: 15px;
+    color: rgba(54, 58, 57, 1);
+}
+#summary {
+    width: 100%;
+}
+#level-badge {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    display: block;
+    width: 50px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border: solid 2px rgba(244, 90, 131, 1);
+    text-align: center;
+    color: rgba(244, 90, 131, 1);
+
+    transform: rotate(45deg);
+    transform-origin: 50% 50%; /*定义动画的旋转中心点*/
+    -ms-transform: rotate(45deg); /* IE 9 */
+    -ms-transform-origin: 50% 50%; /* IE 9 */
+    -webkit-transform: rotate(45deg); /* Safari 和 Chrome */
+    -webkit-transform-origin: 50% 50%; /* Safari 和 Chrome */
+    -moz-transform: rotate(45deg); /* Firefox */
+    -moz-transform-origin: 50% 50%; /* Firefox */
+    -o-transform: rotate(45deg); /* Opera */
+    -o-transform-origin: 50% 50%; /* Opera */
+}
+#summaryDetail {
+    width: 100%;
+    height: 200px;
+    margin-top: 50px;
+    text-align: center;
+}
+#summaryDetail span {
+    display: block;
+    height: 30px;
+    line-height: 30px;
+}
+#summaryDetail span em {
+    margin: 0 2px;
+    font-style: normal;
+    color: rgba(255, 210, 0, 1);
+}
+
+#right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 280px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+}
+
+/*关注列表*/
+#follow-info{
+    width: 100%;
+    font-size: 15px;
+}
+.followee, .follower{
+    display: block;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: left;
+}
+.followee:hover, .follower:hover{
+    background-color: rgba(238, 238, 238, 1);
+}
+.followee img, .follower img{
+    width: 30px;
+    height: 30px;
+    margin: 10px 15px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+}
+.followee a, .follower a{
+    font-size: 14px;
+    cursor: pointer;
+}
+.followee a:hover, .follower a:hover{
+    color: rgba(244, 90, 131, 1);
+}
+.followee .cancel-follow{
+    float: right;
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    margin: 10px 15px;
+    border-radius: 15px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(255, 87, 34, .8);
+    visibility: hidden;
+}
+.followee:hover .cancel-follow{
+    visibility: visible;
+    cursor: pointer;
+}
+.followee:hover .cancel-follow:hover{
+    background-color: rgba(255, 87, 34, 1);
+}
+/*列表为空*/
+.no-content-box{
+    width: 40%;
+    margin: 40px auto;
+}
+.no-content-icon, .no-content {
+    display: block;
+    width: 100%;
+    color: #707070;
+    text-align: center;
+}
+.no-content-icon .icon{
+    font-size: 50px;
+}
+.no-content {
+    height: 50px;
+    line-height: 50px;
+    font-size: 14px;
+    letter-spacing: 1px;
+}

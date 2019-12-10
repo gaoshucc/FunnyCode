@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="commons/navigationbar/head :: headerfiles"></head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home-differnent.css}">
+    <title>FunnyCode</title>
+</head>
+<body>
+<div th:replace="commons/common :: doubleRing"></div>
+<header id="header">
+    <div th:replace="commons/navigationbar/head :: header"></div>
+</header>
+<div id='homePage'>
+    <!--
+    <div id="top">
+        <div id='card'>
+            <ul id='cardList'>
+                <li class='cardItems'>
+                    <a th:href="@{/resource}">
+                        <span class="iconfont">
+                            <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                <use xlink:href="#icon-ziyuan1"></use>
+                            </svg>
+                        </span>
+                        <span>资源</span>
+                    </a>
+                <li class='cardItems'>
+                    <a href='resource.html'>
+                        <span class="iconfont">
+                            <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                <use xlink:href="#icon-weibiaoti2"></use>
+                            </svg>
+                        </span>
+                        <span>工具</span>
+                    </a>
+                </li>
+                <li class='cardItems'>
+                    <a href='#'>
+                        <span class="iconfont">
+                            <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                <use xlink:href="#icon-icon_category"></use>
+                            </svg>
+                        </span>
+                        <span>分类</span>
+                    </a>
+                </li>
+                <li class='cardItems'>
+                    <a href='#'>
+                        <span class="iconfont">
+                            <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                <use xlink:href="#icon-community"></use>
+                            </svg>
+                        </span>
+                        <span>社区</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    -->
+    <div id="container">
+        <div id="center">
+            <!--手记区-->
+            <div id='goodArticle'>
+                <div class='articleHeadline'>
+                    <h2>
+                        <span>
+                            <svg class="icon" aria-hidden="true" style="font-size: 20px;">
+                                <use xlink:href="#icon-biji-copy"></use>
+                            </svg>
+                        </span>
+                        优质手记
+                    </h2>
+                </div>
+                <section id="noteSection" class='section'>
+
+                </section>
+                <div id="note-laypage"></div>
+            </div>
+
+        </div>
+        <div id="rightside">
+            <!--轮播图-->
+            <div class="layui-carousel" id="ad">
+                <div carousel-item>
+                    <div style="background-color: #009688">条目1</div>
+                    <div style="background-color: #5FB878">条目2</div>
+                    <div style="background-color: #009688">条目3</div>
+                    <div style="background-color: #5FB878">条目4</div>
+                    <div style="background-color: #009688">条目5</div>
+                </div>
+            </div>
+            <!--热门文章-->
+            <div id='hot-notes-block'>
+                <div id='techHeadline'>
+                    <h2>
+                        <span>
+                            <svg class="icon" aria-hidden="true" style="font-size: 16px; fill: #f01414;">
+                                <use xlink:href="#icon-hotjar"></use>
+                            </svg>
+                        </span>
+                        <em>热</em><em>门</em><em>文</em><em>章</em>
+                        <span>
+                            <svg class="icon" aria-hidden="true" style="font-size: 16px; fill: #f01414;">
+                                <use xlink:href="#icon-hotjar"></use>
+                            </svg>
+                        </span>
+                    </h2>
+                </div>
+                <section id='hot-notes'>
+                    <!--
+                    <div class='techLink'>
+                        <span>1</span>
+                        <a href='#' title='顺丰高级工程师误删数据库！'>顺丰高级工程师误删数据库！</a>
+                    </div>
+                    -->
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+<!--页脚-->
+<footer id="footer">
+    <div id='footer-content'>
+        <div id="introduce">
+            <h2>FunnyCode</h2>
+            <p>FunnyCode是一个分享技术文章、交流学习心得的IT技术学习交流社区，现有发布手记、赞踩、收藏、关注、私信等功能，其它功能也正在逐步完善中</p>
+        </div>
+        <div id="popu-content">
+            <h2>优质内容</h2>
+            <div id="hot">
+                <a href="#goodArticle">优质手记</a>
+                <a href="#hot-notes-block">热门文章</a>
+            </div>
+        </div>
+        <div id="contact">
+            <div id='contact-content'>
+                <h2>联系我</h2>
+                <div id="connect-way">
+                    <a class="connectlink" href="mailto:postmaster@funnycode.site">
+                        <svg class="icon" aria-hidden="true" style="font-size: 20px">
+                            <use xlink:href="#icon-untitled98"></use>
+                        </svg>
+                    </a>
+                    <a class="connectlink" id='wechat' href="javascript:void(0);">
+                        <svg class="icon" aria-hidden="true" style="font-size: 20px">
+                            <use xlink:href="#icon-wechat1193418easyiconnet"></use>
+                        </svg>
+                        <img th:src="@{/img/home/wechat.jpg}"><span></span>
+                    </a>
+                    <a class="connectlink" href="javascript:void(0);">
+                        <svg class="icon" aria-hidden="true" style="font-size: 20px">
+                            <use xlink:href="#icon-weibo1193419easyiconnet"></use>
+                        </svg>
+                    </a>
+                    <a class="connectlink" id='qq' href="javascript:void(0);">
+                        <svg class="icon" aria-hidden="true" style="font-size: 20px">
+                            <use xlink:href="#icon-qq1193403easyiconnet"></use>
+                        </svg>
+                        <img th:src="@{/img/home/qq.jpg}"><span></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="reference">
+            <a href="http://www.beian.miit.gov.cn/" target="_blank">粤ICP备19130633号</a>
+            <span id="copyright">©AllRightsReserved CC</span>
+        </div>
+    </div>
+</footer>
+<!--
+<a id="noting" th:href="@{/user/note}" title="创建手记">
+    <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-feather-alt"></use>
+    </svg>
+</a>
+-->
+<div id="feedback">
+    <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-yijianxiang"></use>
+    </svg>
+</div>
+<div id="uptoTop">
+    <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-fanhuidingbu"></use>
+    </svg>
+</div>
+<script type="text/javascript" th:src="@{/js/home.js}"></script>
+</body>
+</html>

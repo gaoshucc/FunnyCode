@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="commons/common :: headfiles"></head>
+    <link rel="stylesheet" th:href="@{/user-editormd/css/editormd.css}"/>
+    <link rel="stylesheet" th:href="@{/user-editormd/css/myeditormd.css}"/>
+    <link rel="stylesheet" th:href="@{/user-editormd/css/myeditormd-different.css}"/>
+    <title th:text="${note.title}"></title>
+</head>
+<body>
+<div th:replace="commons/common :: doubleRing"></div>
+<div id='container'>
+    <form id="note-form" method="post">
+        <input type="hidden" name="noteId" th:value="${note.id}">
+        <input type="hidden" id="hiddenTypeId" th:value="${note.type}">
+        <input type="hidden" id="status" th:value="${note.status}">
+        <div id='funcBar'>
+            <label id='titleLabel'>标题：</label><input type="text" id='title' name="title" th:value="${note.title}" autocomplete="off">
+            <select name='typeId' id='noteType'>
+                <option style="display: none">请选择</option>
+            </select>
+
+        </div>
+        <div class="editormd" id="note-editormd">
+            <textarea class="editormd-markdown-textarea" name="markdownDoc" th:text="${note.content}"></textarea>
+            <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+            <textarea class="editormd-html-textarea" name="noteContent" id="note-editormd-html-doc"></textarea>
+        </div>
+    </form>
+</div>
+<!--editormd-->
+<script type="text/javascript" th:src="@{/user-editormd/editormd.js}"></script>
+<script type="text/javascript" th:src="@{/js/editing.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        editormd("note-editormd", {
+            width: "100%",
+            height: 640,
+            syncScrolling: "single",
+            path: "/user-editormd/lib/",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/user/file/notepic",
+            saveHTMLToTextarea: true,
+            emoji: true,
+            toc: true,
+            taskList: true,
+            toolbarIcons: function () {
+                return ["undo", "redo", "|", "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|", "h1", "h2", "h3", "h4", "h5", "h6", "|", "list-ul", "list-ol", "hr", "|", "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "emoji", "html-entities", "pagebreak", "|", "goto-line", "watch", "preview", "fullscreen", "clear", "search", "|", "help", "info"]
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="commons/navigationbar/head :: headerfiles"></head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/notes.css}"/>
+    <!--<script>
+        function showSerch() {
+            let serchInput = document.querySelector("#serch-input");
+            serchInput.style.width = "160px";
+        }
+        function hideSerch() {
+            let serchInput = document.querySelector("#serch-input");
+            serchInput.style.width = "44px";
+        }
+    </script>-->
+    <title>我的手记</title>
+</head>
+<body>
+<div th:replace="commons/common :: doubleRing"></div>
+<header id='header'>
+    <div th:replace="commons/navigationbar/head :: header"></div>
+</header>
+<div id='container'>
+    <div id="center" class="layui-tab layui-tab-brief" lay-filter="mynotes-tab">
+        <ul class="layui-tab-title">
+            <li lay-id="1" data-status="1">回收站</li>
+            <li lay-id="2" data-status="2">已保存</li>
+            <li lay-id="3" data-status="3" class="layui-this">已发布</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div id="recycle-bin" class="layui-tab-item"></div>
+            <div id="saved" class="layui-tab-item"></div>
+            <div id="published" class="layui-tab-item layui-show"></div>
+        </div>
+    </div>
+    <a id="noting" th:href="@{/user/note}" title="创建手记">
+        <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-feather-alt"></use>
+        </svg>
+    </a>
+    <!--<span id="serch" th:href="@{/user/note}" title="搜一搜" onmouseover="showSerch()" onmouseout="hideSerch()">
+        <input id="serch-input" type="text">
+        <em>
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-sousuo"></use>
+            </svg>
+        </em>
+    </span>-->
+</div>
+<script type="text/javascript" th:src="@{/js/notes.js}"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="commons/common :: headfiles"></head>
+    <!--validation插件-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/validation.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login-different.css}">
+    <title>登录</title>
+</head>
+<body>
+<div th:replace="commons/common :: doubleRing"></div>
+<div id="container">
+    <span id="website-icon">
+        <svg class="icon icon-7" aria-hidden="true">
+            <use xlink:href="#icon-7"></use>
+        </svg>
+        <em>FunnyCode</em>
+    </span>
+    <a th:href="@{/}" id="visitor">游客访问</a>
+
+    <div id="login-reg-box" class="layui-tab layui-tab-brief" lay-filter="loginregTabBrief">
+        <ul id="login-reg-tab-title" class="layui-tab-title">
+            <li class="layui-this">登录</li>
+            <li>注册</li>
+        </ul>
+        <div class="layui-tab-content">
+            <!--登录-->
+            <div id="login-content" class="layui-tab-item layui-show">
+                <div id="input-area">
+                    <form id="login-form" th:action="@{/login}" method="POST">
+                        <span class="input-parent">
+                            <input type="text" id="login-username" name="username" class="input" placeholder="账号" th:value="${username}" autocomplete="off">
+                        </span>
+                        <span class="input-parent">
+                            <input type="password" name="password" class="input" placeholder="密码" th:value="${password}" autocomplete="off">
+                        </span>
+                        <input type="hidden" name="next" th:value="${next}" autocomplete="off"/>
+                        <label class="other">
+                            <input type="checkbox" name="rememberMe" autocomplete="off">
+                            记住我
+                        </label>
+                        <a href="#" id="forgot-pwd" class="other">忘记密码</a>
+                        <button type="submit" id="login-btn">登录</button>
+                    </form>
+                </div>
+                <div id="third-login">
+                    <span id="third-login-title">———&nbsp;&nbsp;第三方登录&nbsp;&nbsp;———</span>
+                    <ul>
+                        <li>
+                            <a title="微信登录">
+                                <svg class="icon third-login-icon" aria-hidden="true">
+                                    <use xlink:href="#icon-weixin1"></use>
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a id="qq-login" title="QQ登录">
+                                <svg class="icon third-login-icon" aria-hidden="true">
+                                    <use xlink:href="#icon-social-qq"></use>
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--注册-->
+            <div id="reg-content" class="layui-tab-item">
+                <div id="reg-input-area">
+                    <form id="regist-form" method="POST">
+                        <span class="input-parent"><input id="username" name="username" type="text" class="reg-input"
+                                                  placeholder="手机号" autocomplete="off"></span>
+                        <span class="input-parent"><input id="nickname" name="nickname" type="text" class="reg-input"
+                                                          placeholder="昵称" autocomplete="off"></span>
+                        <span class="input-parent"><input id="password" name="password" type="password" class="reg-input"
+                                                          placeholder="密码" autocomplete="off"></span>
+                        <span class="input-parent" id="valicode-input-parent">
+                            <input type="text" name="valicode" class="reg-input" id="vali-code" placeholder="验证码">
+                            <img id="vali-code-img" src="#">
+                        </span>
+                        <button type="submit" id="register-btn">注册</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--validation插件-->
+<script type="text/javascript" th:src="@{/js/common/validation/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/js/common/validation/additional-methods.js}"></script>
+<script type="text/javascript" th:src="@{/js/common/validation/messages_zh.js}"></script>
+<script type="text/javascript" th:src="@{/js/login.js}"></script>
+</body>
+</html>

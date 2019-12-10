@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.funnycode.blog.dao.CommentDAO">
+    <!--查找评论-->
+    <resultMap id="CommentVO" type="com.funnycode.blog.model.VO.CommentVO">
+        <id property="id" column="id"></id>
+        <result property="content" column="content"></result>
+        <result property="createTime" column="create_time"></result>
+        <association property="user" column="user_id" javaType="com.funnycode.blog.model.User"
+                     select="com.funnycode.blog.dao.UserDAO.getObserverById"></association>
+        <collection property="childComments" column="{entityType=entity_type,entityId=entity_id,id=id}"
+                    javaType="java.util.List"
+                    ofType="com.funnycode.blog.model.VO.CommentVO"
+                    select="com.funnycode.blog.dao.CommentDAO.selectCommentsByEntity"></collection>
+    </resultMap>
+    <select id="selectCommentsByEntity" resultMap="CommentVO">
+        SELECT id, user_id, entity_type, entity_id, content, create_time
+        FROM comment
+        WHERE entity_type=#{entityType} AND entity_id=#{entityId} AND parent_id=#{id}/* AND status=1*/
+        ORDER BY create_time DESC
+    </select>
+    <!--查找子评论-->
+    <!--
+    <resultMap id="child" type="com.funnycode.blog.model.VO.CommentVO">
+        <id property="id" column="id"></id>
+        <result property="content" column="content"></result>
+        <result property="createTime" column="create_time"></result>
+        <association property="user" column="user_id" javaType="com.funnycode.blog.model.User"
+                     select="com.funnycode.blog.dao.UserDAO.getObserverById"></association>
+        <collection property="childComments" column="{entityType=entity_type,entityId=entity_id,id=id}"
+                    javaType="java.util.List"
+                    ofType="com.funnycode.blog.model.VO.CommentVO"
+                    select="com.funnycode.blog.dao.CommentDAO.findChildComments"></collection>
+    </resultMap>
+    <select id="findChildComments" resultMap="child">
+        SELECT id, user_id, entity_type, entity_id, content, create_time
+        FROM  comment
+        WHERE entity_type=#{entityType} AND entity_id=#{entityId} AND parent_id = #{id} AND status=1
+        ORDER BY create_time DESC
+    </select>
+    -->
+</mapper>

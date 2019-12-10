@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="commons/navigationbar/head :: headerfiles"></head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/message.css}">
+    <title>我的消息</title>
+</head>
+<body>
+<div th:replace="commons/common :: doubleRing"></div>
+<header id='header'>
+    <div th:replace="commons/navigationbar/head :: header"></div>
+</header>
+<div id="container">
+    <input id="msg-type" type="hidden" th:value="${msgtype}">
+    <aside id="left-side">
+        <div id="system-message">
+            <h2>
+                <span id='system-message-icon'>
+                    <svg class="icon" aria-hidden="true" style="font-size: 25px;">
+                        <use xlink:href="#icon-xinbaniconshangchuan-"></use>
+                    </svg>
+                </span>
+                <span id='system-message-text'>系统消息</span>
+            </h2>
+        </div>
+        <div id='personal-letter'>
+            <h2>
+                <div id="user-search">
+                    <input type="text" id="pl-user" autocomplete="off"/>
+                    <span>
+                        <svg class="icon" aria-hidden="true" style="font-size: 20px;">
+                            <use xlink:href="#icon-sousuo"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div id="pl-user-optional"></div>
+                我的私信
+            </h2>
+            <div id='personal-letter-items'>
+                <!--
+                <span class='personal-letter-item'>
+                    <img src='http://images.nowcoder.com/head/436t.png'>
+                    <span class="pluser-nickname">我是一条酸菜鱼</span>
+                    <span class="pluser-msg">你好呀哈哈哈</span>
+                </span>
+                -->
+            </div>
+        </div>
+    </aside>
+    <div id="rightside">
+        <div id="sys-msg" class="layui-tab layui-tab-brief msg-block show" lay-filter="sys-msg">
+            <ul class="layui-tab-title">
+                <li data-type='2' lay-id="2" id="follow-me">关注我的<span class="msg-follow-unread hide layui-badge"></span></li>
+                <li data-type='3' lay-id="3" id="like-me">收到的赞<span class="msg-like-unread hide layui-badge"></span></li>
+                <li data-type='4' lay-id="4" id="reply-me">回复我的<span class="msg-comment-unread hide layui-badge"></span></li>
+                <li data-type='0' lay-id="0" id="sys-notification">系统通知<span class="msg-sys-unread hide layui-badge"></span></li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="msg-item-content layui-tab-item"></div>
+                <div class="msg-item-content layui-tab-item"></div>
+                <div class="msg-item-content layui-tab-item"></div>
+                <div class="msg-item-content layui-tab-item"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/message.js}"></script>
+</body>
+</html>

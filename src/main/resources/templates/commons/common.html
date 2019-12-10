@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="headfiles">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" th:href="@{/img/common/logo1.png}" type="image/x-icon"/>
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-2/jquery.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/common.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/utils.css}"/>
+    <script type="text/javascript" th:src="@{/js/common/utils.js}"></script>
+    <!--矢量字体图标-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/common.css}"/>
+    <script type="text/javascript" th:src="@{//at.alicdn.com/t/font_828483_fi0ozah9zd.js}"></script>
+    <!--layui-->
+    <link rel="stylesheet" type="text/css" th:href="@{/layui/css/layui.css}"/>
+    <script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+</head>
+<body>
+<script th:fragment="doubleRing">
+    let loadEleId = fullScreenLoading(document.getElementsByTagName('body')[0], createRandomId());
+    window.onload = function(){
+        loaded(document.getElementsByTagName('body')[0], document.getElementById(loadEleId));
+    };
+</script>
+</body>
+</html>

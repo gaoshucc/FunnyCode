@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="commons/navigationbar/head :: headerfiles"></head>
+    <!-- validation参数校验 -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/validation.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/account.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/account-different.css}">
+    <title>我的账号</title>
+</head>
+<body>
+<div th:replace="commons/common :: doubleRing"></div>
+<header id='header'>
+    <div th:replace="commons/navigationbar/head :: header"></div>
+</header>
+
+<div id='container'>
+    <div id='account'>
+        <div class='func-headline'>
+            <span id="edit-account-info" title="修改">
+                <svg class="icon icon-7" aria-hidden="true" style="font-size: 12px">
+                    <use xlink:href="#icon-xiugai"></use>
+                </svg>
+            </span>
+            <h2><span class='iconfont icon-yonghu'></span><em>我</em><em>的</em><em>账</em><em>号</em></h2>
+        </div>
+        <div id='accountInfo'>
+            <div id='basicInfo' class="layui-form" lay-filter="basic-form">
+                <div id='profileItem'>
+                    <label id='profileText'>头像</label><img id="my-profile">
+                </div>
+                <div class='accountItems'>
+                    <label class='itemname'>账号</label><span id="username" class='itemInfo'></span>
+                </div>
+                <div class='accountItems'>
+                    <label class='itemname'>昵称</label><span id="nickname" class='itemInfo nickname'></span>
+                </div>
+                <div class='accountItems'>
+                    <label class='itemname'>性别</label>
+                    <span id="gender" class='account-icon'>
+
+                    </span>
+                </div>
+                <div class='accountItems'>
+                    <label class='itemname'>邮箱</label><span id="email" class='itemInfo'>无</span>
+                </div>
+                <div class='accountItems'>
+                    <label class='itemname'>个性签名</label><span id="signature" class='itemInfo'></span>
+                </div>
+                <div class="layui-form-item" style="margin-bottom: 0; border-top: solid 1px rgba(196, 196, 196, .7);">
+                    <label class='itemname'>QQ</label>
+                    <div class="layui-input-block" style="float: right; margin-right: 5px;">
+                        <input type="checkbox" name="qq-bind" lay-skin="switch" lay-text="已绑定|未绑定" lay-filter="qq-bind">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-bottom: 0; border-top: solid 1px rgba(196, 196, 196, .7);">
+                    <label class='itemname'>微信</label>
+                    <div class="layui-input-block" style="float: right; margin-right: 5px;">
+                        <input type="checkbox" name="wechat-bind" lay-skin="switch" lay-text="已绑定|未绑定" lay-filter="wechat-bind">
+                    </div>
+                </div>
+            </div>
+            <div id='achievement'>
+                <div id='summary'>
+                    <span id="level-badge" class='level'></span>
+                    <div id='summaryDetail'>
+                        <span>我已经进入社区<em id="active"></em>天了，总共</span>
+                        <span>发布了<em id="note-cnt"></em>篇手记</span>
+                        <span>关注了<em id="followee-cnt"></em>个博友</span>
+                        <span>收获了<em id="follower-cnt"></em>个粉丝</span>
+                        <span>获得了<em id="experience"></em>积分</span>
+                        <span>已经达到<em class='level'></em>级别</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id='follow'>
+        <div class="layui-tab" lay-filter="follow-list">
+            <ul class="layui-tab-title">
+                <li lay-id="1" class="layui-this">我关注的</li>
+                <li lay-id="2">关注我的</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div id="followees" class="layui-tab-item layui-show"></div>
+                <div id="followers" class="layui-tab-item"></div>
+            </div>
+        </div>
+    </div>
+
+    <aside id='right'>
+        <!--轮播图-->
+        <div class="layui-carousel" id="recommend-carousel">
+            <div carousel-item>
+                <div style="background-color: #009688">条目1</div>
+                <div style="background-color: #5FB878">条目2</div>
+                <div style="background-color: #009688">条目3</div>
+                <div style="background-color: #5FB878">条目4</div>
+                <div style="background-color: #009688">条目5</div>
+            </div>
+        </div>
+    </aside>
+</div>
+<!-- validation参数校验 -->
+<script type="text/javascript" th:src="@{/js/common/validation/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/js/common/validation/additional-methods.js}"></script>
+<script type="text/javascript" th:src="@{/js/common/validation/messages_zh.js}"></script>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+</body>
+</html>

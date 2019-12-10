@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="commons/navigationbar/head :: headerfiles"></head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/favorites.css}">
+    <title>我的收藏</title>
+</head>
+<body>
+<div th:replace="commons/common :: doubleRing"></div>
+<header id='header'>
+    <div th:replace="commons/navigationbar/head :: header"></div>
+</header>
+<div id='container'>
+    <div id="favorites-headline">
+        <span class="loginUserNickname"></span>
+        <span>收藏的文章</span>
+        <span>共<em id="favorites-count"></em>篇</span>
+    </div>
+    <section id="favorites-section">
+    </section>
+</div>
+<script type="text/javascript" th:src="@{/js/favorites.js}"></script>
+</body>
+</html>

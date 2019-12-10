@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="commons/navigationbar/head :: headerfiles"></head>
+    <link rel="stylesheet" th:href="@{/kindeditor/themes/default/default.css}"/>
+    <link rel="stylesheet" th:href="@{/user-editormd/css/editormd.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/note.css}"/>
+    <script type="text/javascript" th:src="@{/js/note.js}"></script>
+    <title th:text="${note.title}"></title>
+</head>
+<body>
+<div th:replace="commons/common :: doubleRing"></div>
+<header id='header'>
+    <div th:replace="commons/navigationbar/head :: header"></div>
+</header>
+<div id='container'>
+    <article id='article'>
+        <!--设置隐藏域存储当前用户-->
+        <input type="hidden" id="current-user" th:value="${userId}">
+        <!--设置隐藏域存储手记ID-->
+        <input type="hidden" id="noteId" th:value="${note.id}">
+        <div id='articleHeadline'>
+            <h2 id="title" th:text="${note.title}"></h2>
+            <span id="noteType" th:text="${note.type}"></span>
+            <!--todo 实现浏览数统计功能-->
+            <time th:text="${#dates.format(note.createTime,'yyyy-MM-dd HH:mm')}" id="createTime"></time>
+            <ul id='shareList'>
+                <li title='分享到QQ空间'>
+                    <svg class="icon" aria-hidden="true">
+                        <use xlink:href="#icon-qq-copy"></use>
+                    </svg>
+                </li>
+                <li title='分享到QQ'>
+                    <svg class="icon" aria-hidden="true">
+                        <use xlink:href="#icon-qq-copy1"></use>
+                    </svg>
+                </li>
+                <li title='分享到微信'>
+                    <svg class="icon" aria-hidden="true">
+                        <use xlink:href="#icon-wechat1193418easyiconnet"></use>
+                    </svg>
+                </li>
+            </ul>
+        </div>
+        <div id='content-editormd'>
+            <textarea style="display: none;" th:text="${note.content}"></textarea>
+        </div>
+
+        <!--========评论======-->
+        <div id="write-comment-box">
+
+        </div>
+        <!--========评论区========-->
+        <div id="comment-area">
+            <div id="comment-area-title">
+                <span>评论区</span>
+            </div>
+            <div id="comments">
+
+            </div>
+        </div>
+    </article>
+    <aside id='writerInfoBox'>
+        <div id='writerInfo' th:data-id="${authorId}">
+            <img id="writerProfile" th:src="${authorProfile}">
+            <div id='writer'>
+                <a th:href="|/user/${authorId}|" id="writerName" th:text="${authorNickname}"></a>
+                <a id="follow-user" th:data-tag="-1">关注TA</a>
+            </div>
+        </div>
+        <div id='devote'>
+            <span>
+                手记
+                <em id="noteCount">-</em>
+                篇
+            </span>
+            <span>
+                经验值
+                <em id="answerCount" th:text="${authorExperience}">-</em>
+            </span>
+            <span>
+                粉丝
+                <em id="fansCount">-</em>
+                位
+            </span>
+        </div>
+    </aside>
+    <aside id='recommend'>
+        <h2>相关推荐</h2>
+        <!--轮播图-->
+        <div class="layui-carousel" id="recommend-carousel">
+            <div carousel-item>
+                <div style="background-color: #009688">条目1</div>
+                <div style="background-color: #5FB878">条目2</div>
+                <div style="background-color: #009688">条目3</div>
+                <div style="background-color: #5FB878">条目4</div>
+                <div style="background-color: #009688">条目5</div>
+            </div>
+        </div>
+    </aside>
+</div>
+<div id='articleFunc'>
+    <ul>
+        <li id="favorite">
+            <svg id="favorite-icon" class="icon icon-unie64b" aria-hidden="true">
+                <use xlink:href="#icon-unie64b"></use>
+            </svg>
+        </li>
+        <li id="like" title="赞">
+            <svg class="icon icon-zan" aria-hidden="true">
+                <use xlink:href="#icon-zan"></use>
+            </svg>
+            <span>-</span>
+        </li>
+        <li id="dislike" title="踩">
+            <svg class="icon icon-cai" aria-hidden="true">
+                <use xlink:href="#icon-cai"></use>
+            </svg>
+            <span>-</span>
+        </li>
+    </ul>
+</div>
+
+<span id="report">
+    <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-tousu1"></use>
+    </svg>
+</span>
+<span id="uptoTop">
+    <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-fanhuidingbu"></use>
+    </svg>
+</span>
+
+<!--kindeditor编辑器-->
+<script type="text/javascript" charset="utf-8" th:src="@{/kindeditor/kindeditor-all-min.js}"></script>
+<script type="text/javascript" charset="utf-8" th:src="@{/kindeditor/lang/zh-CN.js}"></script>
+<!--editormd编辑器-->
+<script type="text/javascript" th:src="@{/user-editormd/lib/marked.min.js}"></script>
+<script type="text/javascript" th:src="@{/user-editormd/lib/prettify.min.js}"></script>
+<script type="text/javascript" th:src="@{/user-editormd/lib/raphael.min.js}"></script>
+<script type="text/javascript" th:src="@{/user-editormd/lib/underscore.min.js}"></script>
+<script type="text/javascript" th:src="@{/user-editormd/lib/sequence-diagram.min.js}"></script>
+<script type="text/javascript" th:src="@{/user-editormd/lib/flowchart.min.js}"></script>
+<script type="text/javascript" th:src="@{/user-editormd/lib/jquery.flowchart.min.js}"></script>
+<script type="text/javascript" th:src="@{/user-editormd/editormd.js}"></script>
+<script>
+    let editormdEditor;
+    $(function () {
+        //editormd编辑器
+        editormdEditor = editormd.markdownToHTML("content-editormd", {
+            htmlDecode: "style,script,iframe",
+            emoji: true,
+            taskList: true,
+            tex: true, // 默认不解析
+            flowChart: true, // 默认不解析
+            sequenceDiagram: true, // 默认不解析
+            codeFold: true
+        });
+    });
+</script>
+
+</body>
+</html>

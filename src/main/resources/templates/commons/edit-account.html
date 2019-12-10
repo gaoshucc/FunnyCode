@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--layui-->
+    <link rel="stylesheet" type="text/css" th:href="@{/layui/css/layui.css}"/>
+    <style>
+        #container {
+            width: 430px;
+            height: 380px;
+            padding: 20px 40px 20px 0;
+        }
+        /*头像*/
+        #edit-profile {
+            height: 45px;
+        }
+        #edit-profile img {
+            float: right;
+            width: 45px;
+            height: 45px;
+        }
+        #upload-profile {
+            float: right;
+            position: relative;
+            display: inline-block;
+            height: 20px;
+            line-height: 20px;
+            width: 30px;
+            margin: 25px 5px 5px 5px;
+            border-radius: 2px;
+            font-size: 12px;
+            color: #fff;
+            background-color: #5FB878;
+            text-align: center;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        #upload-profile input[type=file] {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 30px;
+            height: 20px;
+            line-height: 20px;
+            opacity: 0;
+            -ms-filter: 'alpha(opacity=0)';
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <form id="edit-form" class="layui-form" lay-filter="edit-form">
+        <div class="layui-form-item" id="edit-profile">
+            <label class="layui-form-label" style="height: 27px;line-height: 27px;">头像</label>
+            <div class="layui-input-block">
+                <img id="profile" title="头像">
+                <span id="upload-profile">更换<input type="file" id="profile-btn" accept="image/*" name="profile"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="nickname" lay-verify="required|nickname" placeholder="请输入昵称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="email" placeholder="请输入邮箱" lay-verify="fcemail" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">个性签名</label>
+            <div class="layui-input-block">
+                <textarea name="motto" placeholder="请输入个性签名" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="gender" value="1" title="男">
+                <input type="radio" name="gender" value="2" title="女">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-bottom: 0;">
+            <div class="layui-input-block" style="float: right;">
+                <button class="layui-btn" lay-submit lay-filter="edit-form-submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--jQuery-->
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-2/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common/utils.js}"></script>
+<!--矢量字体图标-->
+<script type="text/javascript" th:src="@{//at.alicdn.com/t/font_828483_fi0ozah9zd.js}"></script>
+<!--layui-->
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script>
+    layui.use('form', function(){
+        let form = layui.form;
+        //自定义表单校验规则
+        form.verify({
+            nickname: function(value, item){
+                let result = '';
+                $.ajax({
+                    type: "POST",
+                    url: PRO_NAME + "/user/nicknameexists",
+                    data: {
+                        "nickname": value
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        if(data.code !== REQ_SUCC){
+                            result = "该昵称已存在";
+                        }
+                    },
+                    async: false
+                });
+
+                return result;
+            },
+            fcemail: function(value, item){
+                let result = '', reg =/^\w+@[a-z0-9]+\.[a-z]+$/i;/*邮箱不区分大小写*/
+                if(!isNullStr(value)){
+                    if(!reg.test(value)){
+                        result = '邮箱格式错误';
+                    }
+                }
+
+                return result;
+            }
+        });
+
+        //获取可编辑信息
+        $.ajax({
+            type: "GET",
+            url: PRO_NAME + "/user/account/editable",
+            dataType: "json",
+            success: function (data) {
+                if(data.code === REQ_SUCC && data.data !== undefined){
+                    let user = data.data.user;
+                    //表单赋值
+                    let profile = document.querySelector("#profile");
+                    profile.src = user.profilePath;
+                    form.val("edit-form", {
+                        "nickname":user.nickname,
+                        "email":user.email,
+                        "motto":user.motto,
+                        "gender":user.gender
+                    });
+                }else{
+                    parent.layer.msg("查询数据异常", {
+                        time: 2500
+                    });
+                }
+            },
+            async: true
+        });
+
+        //预览图片
+        let file = document.querySelector("#profile-btn");
+        file.addEventListener("change", function () {
+            if(file.value === ''){
+                return false;
+            }else{
+                preImg("profile-btn","profile");
+            }
+        });
+
+        //监听提交
+        form.on('submit(edit-form-submit)', function(data){
+            console.log(data.field);
+            let formData = new FormData($("#edit-form")[0]);
+            $.ajax({
+                type: "POST",
+                url: PRO_NAME + "/user/account/edited",
+                data: formData,
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if(data.code === REQ_SUCC){
+                        let index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                        parent.layer.msg("修改信息成功", {
+                            time: 2500
+                        });
+                    }else{
+                        parent.layer.msg("修改信息失败", {
+                            time: 2500
+                        });
+                    }
+                },
+                async: false
+            });
+
+            return false;
+        });
+
+        //读取图片后预览
+        function preImg(fileId,imgId) {
+            let imgPre = document.getElementById(imgId);
+            imgPre.src = getFileUrl(fileId);
+        }
+        //获取input[file]图片的url Important
+        function getFileUrl(fileId) {
+            let url;
+            let file = document.getElementById(fileId);
+            let agent = navigator.userAgent;
+            if (agent.indexOf("MSIE")>=1) {
+                url = file.value;
+            } else if(agent.indexOf("Firefox")>0) {
+                url = window.URL.createObjectURL(file.files.item(0));
+            } else if(agent.indexOf("Chrome")>0) {
+                url = window.URL.createObjectURL(file.files.item(0));
+            }
+            return url;
+        }
+    });
+</script>
+</body>
+</html>

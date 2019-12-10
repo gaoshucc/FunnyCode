@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.funnycode.blog.dao.NoteDAO">
+    <!--
+    String TABLE_NAME = "note";
+    String INSERT_FIELDS = " title, type, user_id, create_time, status, content ";
+    String SELECT_FIELDS = " id, " + INSERT_FIELDS;
+    -->
+    <sql id="table">note</sql>
+    <sql id="selectFields">id, title, type, user_id, create_time, status, content, comment_cnt</sql>
+    <select id="selectNotes" resultType="com.funnycode.blog.model.Note">
+        SELECT
+        <include refid="selectFields"/>
+        FROM
+        <include refid="table"/>
+        WHERE status = 1
+        ORDER BY id DESC
+        LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="selectUserNotes" resultType="com.funnycode.blog.model.Note">
+        SELECT
+        <include refid="selectFields"/>
+        FROM
+        <include refid="table"/>
+        WHERE status = 1 AND user_id = #{userId}
+        ORDER BY id DESC
+        LIMIT #{offset},#{limit}
+    </select>
+
+    <!--listUserNotesByStatus-->
+    <select id="listUserNotesByStatus" resultType="com.funnycode.blog.model.Note">
+        SELECT
+        <include refid="selectFields"/>
+        FROM
+        <include refid="table"/>
+        WHERE user_id = #{userId} AND status = #{status}
+        ORDER BY id DESC
+        LIMIT #{offset},#{limit}
+    </select>
+</mapper>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="commons/common :: headfiles"></head>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        #container{
+            width: 100%;
+            padding-top: 160px;
+        }
+        #error-icon{
+            width: 100px;
+            height: 80px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        #error-msg{
+            width: 100%;
+            line-height: 60px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 16px;
+        }
+    </style>
+    <title>错误</title>
+</head>
+<body>
+<div th:replace="commons/common :: doubleRing"></div>
+<div id="container">
+    <div id="error-icon">
+        <svg class="icon" aria-hidden="true" style="font-size: 70px;">
+            <use xlink:href="#icon-404"></use>
+        </svg>
+    </div>
+    <div id="error-msg">
+        <span th:text="${code}"></span>：<span th:text="${msg}"></span>
+    </div>
+</div>
+</body>
+</html>

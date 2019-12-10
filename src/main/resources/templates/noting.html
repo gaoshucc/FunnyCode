@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="commons/common :: headfiles"></head>
+    <link rel="stylesheet" th:href="@{/user-editormd/css/editormd.css}"/>
+    <link rel="stylesheet" th:href="@{/user-editormd/css/myeditormd.css}"/>
+    <title>创作手记ing...</title>
+</head>
+<body>
+<!--<div th:replace="commons/common :: doubleRing"></div>-->
+<div id='container'>
+    <form id="note-form" method="post">
+        <div id='funcBar'>
+            <label id='titleLabel'>标题：</label><input type="text" id='title' name="title" autocomplete="off">
+            <select name='typeId' id='noteType'>
+                <option style="display: none">请选择</option>
+            </select>
+            <span id="warm-tips">标题、类型、内容都不能为空哦 ( • ̀ω•́ )</span>
+            <a class="func" id="publish" title="发布手记">发布手记</a>
+            <a class="func" id="save" title="保存手记，下次继续编写">保存手记</a>
+            <a class="func" id='delete' href="/user/mynotes" title="取消本次编辑，且所有修改不保存，该操作不可恢复">取消</a>
+        </div>
+        <div class="editormd" id="note-editormd">
+            <textarea class="editormd-markdown-textarea" name="markdownDoc"></textarea>
+            <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+            <textarea class="editormd-html-textarea" name="noteContent" id="note-editormd-html-doc"></textarea>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" th:src="@{/user-editormd/editormd.js}"></script>
+<script type="text/javascript" th:src="@{/js/noting.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        editormd("note-editormd", {
+            width: "100%",
+            height: 640,
+            syncScrolling: "single",
+            path: "/user-editormd/lib/",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/user/file/notepic",
+            //这个配置在simple.html中并没有，但是为了能够提交表单，使用这个配置可以让构造出来的HTML代码直接在第二个隐藏的textarea域中，方便post提交表单。
+            saveHTMLToTextarea: true,
+            emoji: true,
+            toc: true,
+            taskList: true,
+            toolbarIcons: function () {
+                return ["undo", "redo", "|", "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|", "h1", "h2", "h3", "h4", "h5", "h6", "|", "list-ul", "list-ol", "hr", "|", "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "emoji", "html-entities", "pagebreak", "|", "goto-line", "watch", "preview", "fullscreen", "clear", "search", "|", "help", "info"]
+            },
+            placeholder: "从这里开始书写..."
+        });
+    });
+</script>
+</body>
+</html>

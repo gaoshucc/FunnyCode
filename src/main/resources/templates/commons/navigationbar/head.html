@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="headerfiles">
+    <head th:include="commons/common :: headfiles"></head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/navigationbar/head.css}">
+</head>
+<body>
+    <div id="menu" th:fragment="header">
+        <ul id="nav-left">
+            <li class="menu-item"><a th:href="@{/}">主页</a></li>
+        </ul>
+        <!--<ul class="nav-right" id="unlogin" style="display: none;">
+            <li class="menu-item"><a th:href="@{/tologin}">登录<em class="funnycode-separator">|</em>注册</a></li>
+        </ul>-->
+        <!--<ul class="nav-right" id="logined">
+            <li id="user" class="menu-item">
+                <img src="" id="profile">
+                <div id='user_detail' style="display: none">
+                    <div id='infoBox'>
+                        <span class="loginUserNickname"></span>
+                    </div>
+                    <div id='funcCard'>
+                        <ul id='funcCardList'>
+                            <li class='funcCardItems'>
+                                <a th:href="@{/user/account}">
+                                                <span class='iconfont'>
+                                                    <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                                        <use xlink:href="#icon-yonghu"></use>
+                                                    </svg>
+                                                </span>
+                                    <span>我的账号</span>
+                                </a>
+                            </li>
+                            <li class='funcCardItems'>
+                                <a th:href="@{/user/favorite}">
+                                                <span class='iconfont'>
+                                                    <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                                        <use xlink:href="#icon-wodeshoucang"></use>
+                                                    </svg>
+                                                </span>
+                                    <span>我的收藏</span>
+                                </a>
+                            </li>
+                            <li class='funcCardItems'>
+                                <a th:href="@{/user/mynotes}">
+                                                <span class='iconfont'>
+                                                    <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                                        <use xlink:href="#icon-biji"></use>
+                                                    </svg>
+                                                </span>
+                                    <span>我的手记</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id='quit'><a th:href="@{/logout}">退出</a></div>
+                </div>
+            </li>
+            <li id="message" class="menu-item">
+                <a th:href="@{/user/message/2}">消息<span class="has-unread" id="msg-allunread"></span></a>
+                <ul id="mymessage">
+                    <li><a th:href="@{/user/message/2}">私信我的<span class="unread" id="msg-pm-unread"></span></a></li>
+                    <li><a th:href="@{/user/message/2}">关注我的<span class="unread" id="msg-follow-unread"></span></a></li>
+                    <li><a th:href="@{/user/message/3}">收到的赞<span class="unread" id="msg-like-unread"></span></a></li>
+                    <li><a th:href="@{/user/message/4}">回复我的<span class="unread" id="msg-comment-unread"></span></a></li>
+                    <li><a th:href="@{/user/message/0}">系统通知<span class="unread" id="msg-sys-unread"></span></a></li>
+                </ul>
+            </li>
+            <li id="favorites" class="menu-item">
+                <a href="#">收藏</a>
+                <ul id="favorite-items">
+                    <span>loading...</span>
+                </ul>
+            </li>
+            <li id="timeline" class="menu-item">
+                <a th:href="@{/user/tofeed}">动态<span class="has-unread"></span></a>
+                <ul id="timeline-items">
+                </ul>
+            </li>
+            &lt;!&ndash;
+            <li class="menu-item"><a href="#">历史记录</a></li>
+            &ndash;&gt;
+        </ul>-->
+        <!--未登录模板-->
+        <script id="unlogin-template" type="text/html">
+            <ul class="nav-right" id="unlogin">
+                <li class="menu-item"><a th:href="@{/tologin}">登录<em class="funnycode-separator">|</em>注册</a></li>
+            </ul>
+        </script>
+        <!--已登录模板-->
+        <script id="logined-template" type="text/html">
+            <ul class="nav-right" id="logined">
+                <li id="user" class="menu-item">
+                    <img src="{{ d.profile }}" id="profile">
+                    <div id='user_detail' style="display: none" class="layui-anim layui-anim-upbit">
+                        <div id='infoBox'>
+                            <a href="/user/{{ d.userId }}" data-id="{{ d.userId }}" class="loginUserNickname">{{ d.nickname }}</a>
+                        </div>
+                        <div id='funcCard'>
+                            <ul id='funcCardList'>
+                                <li class='funcCardItems'>
+                                    <a th:href="@{/user/account}">
+                                                <span class='iconfont'>
+                                                    <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                                        <use xlink:href="#icon-yonghu"></use>
+                                                    </svg>
+                                                </span>
+                                        <span>我的账号</span>
+                                    </a>
+                                </li>
+                                <li class='funcCardItems'>
+                                    <a th:href="@{/user/favorite}">
+                                                <span class='iconfont'>
+                                                    <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                                        <use xlink:href="#icon-wodeshoucang"></use>
+                                                    </svg>
+                                                </span>
+                                        <span>我的收藏</span>
+                                    </a>
+                                </li>
+                                <li class='funcCardItems'>
+                                    <a th:href="@{/user/mynotes}">
+                                                <span class='iconfont'>
+                                                    <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                                        <use xlink:href="#icon-biji"></use>
+                                                    </svg>
+                                                </span>
+                                        <span>我的手记</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id='quit'><a th:href="@{/logout}">退出</a></div>
+                    </div>
+                </li>
+                <li id="message" class="menu-item">
+                    <a th:href="@{/user/message/2}">消息<span class="has-unread" id="msg-allunread"></span></a>
+                    <ul id="mymessage" class="layui-anim layui-anim-upbit">
+                        <li><a th:href="@{/user/message/2}">私信我的<span class="unread" id="msg-pm-unread"></span></a></li>
+                        <li><a th:href="@{/user/message/2}">关注我的<span class="unread" id="msg-follow-unread"></span></a></li>
+                        <li><a th:href="@{/user/message/3}">收到的赞<span class="unread" id="msg-like-unread"></span></a></li>
+                        <li><a th:href="@{/user/message/4}">回复我的<span class="unread" id="msg-comment-unread"></span></a></li>
+                        <li><a th:href="@{/user/message/0}">系统通知<span class="unread" id="msg-sys-unread"></span></a></li>
+                    </ul>
+                </li>
+                <li id="favorites" class="menu-item">
+                    <a th:href="@{/user/favorite}">收藏</a>
+                    <ul id="favorite-items" class="layui-anim layui-anim-upbit">
+                        <span>loading...</span>
+                    </ul>
+                </li>
+                <li id="timeline" class="menu-item">
+                    <a th:href="@{/user/tofeed}">动态<span class="has-unread"></span></a>
+                    <ul id="timeline-items" class="layui-anim layui-anim-upbit">
+                    </ul>
+                </li>
+                <li id="creation">
+                    <a th:href="@{/user/note}">原创</a>
+                </li>
+                <!--
+                <li class="menu-item"><a href="#">历史记录</a></li>
+                -->
+            </ul>
+        </script>
+        <script type="text/javascript" th:src="@{/js/common/navigationbar/head.js}"></script>
+    </div>
+</body>
+</html>

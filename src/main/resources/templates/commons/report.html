@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        #report-content{
+            width: 100%;
+            font-size: 14px;
+        }
+        #reason-category {
+            width: 90%;
+            line-height: 30px;
+            margin: 0 auto 10px;
+            color: rgba(54, 58, 57, 1);
+            text-align: left;
+        }
+        #reasonlist {
+            vertical-align: middle;
+        }
+        .reason {
+            margin: 0 5px !important;
+        }
+        .reason input {
+            vertical-align: middle;
+        }
+        #report-text {
+            display: block;
+            width: 90%;
+            height: 120px;
+            line-height: 25px;
+            margin: 0 auto;
+            border: solid 1px rgba(0, 0, 0, 0.5);
+            outline: none;
+            resize: none;
+        }
+        #report-text:focus {
+            border: solid 1px rgba(0, 0, 0, 0.7);
+        }
+        #submit-report {
+            display: block;
+            float: right;
+            width: 60px;
+            height: 30px;
+            line-height: 30px;
+            margin-top: 10px;
+            margin-right: 18px;
+            padding: 0 10px;
+            border-radius: 2px;
+            text-align: center;
+            color: rgba(255, 255, 255, 1);
+            background-color: rgba(235, 26, 48, .8);
+            cursor: pointer;
+        }
+        #submit-report:hover {
+            background-color: rgba(235, 26, 48, 1);
+        }
+    </style>
+</head>
+<body>
+    <div id="report-content">
+        <input id="entityType" type="hidden" th:value="${entityType}">
+        <input id="entityId" type="hidden" th:value="${entityId}">
+        <div id="reason-category">
+            <span id="reasonlist">违规原因：</span>
+        </div>
+        <textarea id="report-text" maxlength="1000" wrap="hard" placeholder="请说明举报原因"></textarea>
+        <a id="submit-report">举报TA</a>
+    </div>
+    <!--jQuery-->
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-2/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common/utils.js}"></script>
+    <!--矢量字体图标-->
+    <script type="text/javascript" th:src="@{//at.alicdn.com/t/font_828483_khci5noh3on.js}"></script>
+    <!--layer-->
+    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+    <script>
+        window.onload = function () {
+            //获取违规原因
+            $.ajax({
+                type: "GET",
+                url: PRO_NAME + "/report/reasons",
+                dataType: "json",
+                success: function (data) {
+                    if(data.code === REQ_SUCC){
+                        if(data.data !== undefined){
+                            let reasonsCategory = document.querySelector("#reason-category");
+                            let reasons = data.data.reasons;
+                            for(let i=0; i<reasons.length; i++){
+                                let reason = document.createElement("span");
+                                reason.classList.add("reason");
+                                reason.innerHTML = "<input class='reason-input' type='checkbox' value='"+ reasons[i].reasonId +"'>" + reasons[i].reason;
+                                reasonsCategory.appendChild(reason);
+                            }
+                        }
+                    }
+                },
+                async: true
+            });
+
+            let submitReportBtn = document.querySelector("#submit-report");
+            submitReportBtn.addEventListener("click", function () {
+                if(hasLogin()){
+                    let entityType = document.querySelector("#entityType").value;
+                    let entityId = document.querySelector("#entityId").value;
+                    let content = document.querySelector("#report-text").value;
+                    let reasons = document.querySelectorAll(".reason-input");
+                    let arr = [];
+                    for(let i=0; i<reasons.length; i++){
+                        if(reasons[i].checked === true){
+                            arr.push(reasons[i].value);
+                        }
+                    }
+
+                    if(arr.length <= 0){
+                        parent.layer.msg("违规原因不能为空", {
+                            time: 2500
+                        });
+                        return;
+                    }
+                    if (isnull(content)) {
+                        parent.layer.msg("举报原因不能为空", {
+                            time: 2500
+                        });
+                        return;
+                    }
+
+                    //向后台发送ajax请求举报手记
+                    $.ajax({
+                        type: "POST",
+                        url: PRO_NAME + "/user/report",
+                        data: {
+                            "entityType": entityType,
+                            "entityId": entityId,
+                            "reasons": JSON.stringify(arr),
+                            "content": content
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if(data.code === REQ_SUCC){
+                                let index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);//关闭弹出层
+                                parent.layer.msg("举报已受理", {
+                                    time: 2500
+                                });
+                            }else{
+                                parent.layer.msg("举报失败", {
+                                    time: 2500
+                                });
+                            }
+                        },
+                        async: true
+                    });
+                }else{
+                    parent.layer.alert("小主，要登录才能举报哦，(,,・ω・,,)", {
+                        title: '提示',
+                        btn: '登录or注册',
+                        yes: function () {
+                            window.location.href = PRO_NAME + "/relogin";
+                        }
+                    });
+                }
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/kindeditor/themes/default/default.css}"/>
+    <style>
+        #reply-comment-box {
+            width: 100%;
+            padding: 10px 0;
+        }
+        #reply-content {
+            display: block;
+            width: 100%;
+            resize: none;
+        }
+        #submit-reply-content {
+            display: block;
+            float: right;
+            width: 60px;
+            height: 30px;
+            line-height: 30px;
+            margin-top: 10px;
+            padding: 0 10px;
+            border-radius: 2px;
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 1);
+            background-color: rgba(0, 161, 214, .8);
+            cursor: pointer;
+        }
+        #submit-reply-content:hover {
+            background-color: rgba(0, 161, 214, 1);
+        }
+    </style>
+</head>
+<body>
+<div id="reply-comment-box">
+    <textarea id='reply-content' name='content' style='visibility:hidden;'></textarea>
+    <a id="submit-reply-content">回复TA</a>
+    <input id="feedId" type="hidden" th:value="${feedId}">
+    <input id="bereplyId" type="hidden" th:value="${bereplyId}">
+</div>
+<!--jQuery-->
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-2/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common/utils.js}"></script>
+<!--矢量字体图标-->
+<script type="text/javascript" th:src="@{//at.alicdn.com/t/font_828483_khci5noh3on.js}"></script>
+<!--layer-->
+<script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+<!--kindeditor编辑器-->
+<script type="text/javascript" charset="utf-8" th:src="@{/kindeditor/kindeditor-all-min.js}"></script>
+<script type="text/javascript" charset="utf-8" th:src="@{/kindeditor/lang/zh-CN.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        //KindEditor编辑器
+        let kindEditor2 = KindEditor.create('#reply-content', {
+            width: '99.5%',       // 文本框宽度(可以百分比或像素)
+            height: '100px',     // 文本框高度(只能像素)
+            minWidth: 200,       // 最小宽度（数字）
+            minHeight: 100,      // 最小高度（数字）
+            themeType: 'simple',
+            resizeType: 0,
+            items: ['emoticons', 'link']
+        });
+
+        //发表评论
+        let feedId = document.querySelector("#feedId");
+        let bereplyId = document.querySelector("#bereplyId");
+        let replyContent = document.querySelector("#reply-content");
+        let submitReplyBtn = document.querySelector("#submit-reply-content");
+
+        submitReplyBtn.addEventListener("click", function (e) {
+            if (hasLogin()) {
+                kindEditor2.sync();
+                addComment(kindEditor2, feedId.value, replyContent.value, bereplyId.value);
+            } else {
+                parent.layer.alert("小主，要登录才能评论哦，(,,・ω・,,)", {
+                    title: '提示',
+                    btn: '登录or注册',
+                    yes: function () {
+                        window.location.href = PRO_NAME + "/relogin";
+                    }
+                });
+            }
+        });
+
+        //发表回复
+        function addComment(kindEditor, feedId, content, parentId) {
+            if (isnull(content)) {
+                parent.layer.msg("回复内容不能为空", {
+                    time: 2500
+                });
+                return;
+            }
+            //向后台发送ajax请求回复TA
+            $.ajax({
+                type: "POST",
+                url: PRO_NAME + "/user/feed/comment",
+                data: {
+                    "feedId": feedId,
+                    "content": content,
+                    "parentId": parentId
+                },
+                dataType: "json",
+                success: function (data) {
+                    if(data.code === REQ_SUCC){
+                        kindEditor.html("");
+                        let index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);//关闭弹出层
+                        parent.layer.msg("回复成功", {
+                            time: 2500
+                        });
+                    }else{
+                        parent.layer.msg("回复失败", {
+                            time: 2500
+                        });
+                    }
+                },
+                async: true
+            });
+        }
+    });
+</script>
+</body>
+</html>
