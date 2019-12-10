@@ -36,22 +36,7 @@ layui.use(['layer','carousel','util'], function () {
         });
 
         //举报
-        let report = document.querySelector("#report"), isClickReportBtn = true, reportTips;
-        report.addEventListener("mouseover", function (e) {
-            e = window.event || e;
-            let s = e.fromElement || e.relatedTarget;
-            if (!this.contains(s)) {
-                let that = this;
-                reportTips = layer.tips('举报', that, {});
-            }
-        });
-        report.addEventListener('mouseout', function (e) {
-            e = window.event || e;
-            let s = e.toElement || e.relatedTarget;
-            if (!this.contains(s)) {
-                layer.close(reportTips);
-            }
-        }, false);
+        let report = document.querySelector("#report"), isClickReportBtn = true;
         report.addEventListener("click", function (e) {
             if(isClickReportBtn){
                 isClickReportBtn = false;
@@ -76,22 +61,7 @@ layui.use(['layer','carousel','util'], function () {
             }
         })
         //跳转到顶部
-        let uptoTop = document.querySelector("#uptoTop"), uptoTopTips;
-        uptoTop.addEventListener("mouseover", function (e) {
-            e = window.event || e;
-            let s = e.fromElement || e.relatedTarget;
-            if (!this.contains(s)) {
-                let that = this;
-                uptoTopTips = layer.tips('顶部', that, {});
-            }
-        });
-        uptoTop.addEventListener('mouseout', function (e) {
-            e = window.event || e;
-            let s = e.toElement || e.relatedTarget;
-            if (!this.contains(s)) {
-                layer.close(uptoTopTips);
-            }
-        }, false);
+        let uptoTop = document.querySelector("#uptoTop");
         uptoTop.addEventListener("click", function (e) {
             $("body,html").animate({scrollTop: 0}, 300);
         })

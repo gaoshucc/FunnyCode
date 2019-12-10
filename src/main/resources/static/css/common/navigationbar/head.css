@@ -15,6 +15,12 @@ body {
 }
 
 /*-----------测试-------------*/
+.menu-active{
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
 #menu{
     z-index: 1;
     position: absolute;
@@ -55,6 +61,7 @@ body {
     color: rgba(54, 58, 57, 1);
     text-align: center;
     cursor: pointer;
+    vertical-align: middle;
 }
 .menu-item > a .has-unread{
     display: block;

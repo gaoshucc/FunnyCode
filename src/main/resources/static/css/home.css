@@ -541,7 +541,7 @@
     display: block;
 }
 /*侧边按钮*/
-#noting, #feedback, #uptoTop {
+#feedback, #uptoTop {
     display: block;
     position: fixed;
     right: 30px;
@@ -554,14 +554,25 @@
     color: rgba(136, 149, 166, 1);
     text-align: center;
     cursor: pointer;
+    overflow: hidden;
 }
-#noting:hover, #feedback:hover, #uptoTop:hover {
+#feedback:hover, #uptoTop:hover {
     color: rgba(121, 158, 232, .91);
 }
-/*创建手记按钮*/
-#noting {
-    bottom: 180px;
-    font-size: 20px;
+#feedback:hover::before, #uptoTop:hover::before{
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+    text-align: center;
+    background-color: #fff;
+}
+#feedback:hover::before{
+    content: '反馈';
+}
+#uptoTop:hover::before{
+    content: 'TOP';
 }
 /*反馈按钮*/
 #feedback {

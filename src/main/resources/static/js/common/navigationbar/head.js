@@ -8,6 +8,21 @@ layui.use(['layer', 'flow', 'util', 'laytpl', 'element'], function () {
     //初始化
     checkLogin();
 
+    //下滚导航栏吸顶
+    let t= 0, p = 0,
+        header = document.querySelector("#header");   // 目前监听的是整个body的滚动条距离
+    window.addEventListener("scroll", function (e) {
+        p = $('body, html').scrollTop();
+        if(t<=p){   //下滚
+            console.log("下滚");
+            header.classList.add("menu-active");
+        }else{  //上滚
+            console.log("上滚");
+            header.classList.remove("menu-active");
+        }
+        setTimeout(function(){t = p;},0);
+    });
+
     /**
      * 定期执行函数
      */

@@ -398,6 +398,39 @@ body {
     box-shadow: 0 1px 2px rgba(0, 0, 0,.1);
 }
 
+#uptoTop {
+    display: block;
+    position: fixed;
+    bottom: 80px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    border: rgba(0, 0, 0, 0.3);
+    background-color: rgba(255, 255, 255, 1);
+    color: rgba(136, 149, 166, 1);
+    text-align: center;
+    cursor: pointer;
+    font-size: 30px;
+    overflow: hidden;
+}
+#uptoTop:hover {
+    color: rgba(121, 158, 232, .91);
+}
+#uptoTop:hover::before{
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+    text-align: center;
+}
+#uptoTop:hover::before{
+    content: 'TOP';
+    background-color: #fff;
+}
+
 /*响应式*/
 @media screen and (min-width: 1081px) and (max-width: 1200px) {
     #menu {

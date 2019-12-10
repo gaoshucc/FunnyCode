@@ -19,6 +19,25 @@ layui.use(['element', 'util', 'flow', 'laytpl', 'carousel'], function () {
         indicator: 'inside'
     });
 
+    //初始化页面时，隐藏Top按钮
+    if ($(window).scrollTop() < 100) {
+        $("#uptoTop").fadeOut(1);
+    }
+    $(window).scroll(function () {
+        if ($(window).scrollTop() > 100) {
+            //当页面起点距离窗口大于100时，淡入
+            $("#uptoTop").fadeIn(1000);
+        } else {
+            //当页面起点距离窗口小于100时，淡出
+            $("#uptoTop").fadeOut(1000);
+        }
+    });
+    //跳转到顶部
+    let upToTop = document.querySelector("#uptoTop");
+    upToTop.addEventListener("click", function (e) {
+        $("body,html").animate({scrollTop: 0}, 300);
+    });
+
     getAuthorFollowStatus();
     showNotes();
     element.on('tab(publish-infomation)', function(data){

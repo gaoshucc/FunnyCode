@@ -33,23 +33,6 @@ layui.use(['layer', 'laypage', 'carousel', 'util'], function () {
 
     //反馈
     let feedback = document.querySelector("#feedback"), feedbackTips;
-    feedback.addEventListener("mouseover", function (e) {
-        e = window.event || e;
-        let s = e.fromElement || e.relatedTarget;
-        if (!this.contains(s)) {
-            let that = this;
-            feedbackTips = layer.tips('反馈', that, {
-                time: false
-            });
-        }
-    });
-    feedback.addEventListener('mouseout', function (e) {
-        e = window.event || e;
-        let s = e.toElement || e.relatedTarget;
-        if (!this.contains(s)) {
-            layer.close(feedbackTips);
-        }
-    }, false);
     feedback.addEventListener("click", function (e) {
         if(hasLogin()){
             layer.open({
@@ -97,24 +80,7 @@ layui.use(['layer', 'laypage', 'carousel', 'util'], function () {
     });
 
     //跳转到顶部
-    let upToTop = document.querySelector("#uptoTop"), upToTopTips;
-    upToTop.addEventListener("mouseover", function (e) {
-        e = window.event || e;
-        let s = e.fromElement || e.relatedTarget;
-        if (!this.contains(s)) {
-            let that = this;
-            upToTopTips = layer.tips('顶部', that, {
-                time: false
-            });
-        }
-    });
-    upToTop.addEventListener('mouseout', function (e) {
-        e = window.event || e;
-        let s = e.toElement || e.relatedTarget;
-        if (!this.contains(s)) {
-            layer.close(upToTopTips);
-        }
-    }, false);
+    let upToTop = document.querySelector("#uptoTop");
     upToTop.addEventListener("click", function (e) {
         $("body,html").animate({scrollTop: 0}, 300);
     });

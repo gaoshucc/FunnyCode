@@ -106,7 +106,7 @@
                                                         <use xlink:href="#icon-yonghu"></use>
                                                     </svg>
                                                 </span>
-                                        <span>我的账号</span>
+                                        <span>个人信息</span>
                                     </a>
                                 </li>
                                 <li class='funcCardItems'>
@@ -135,7 +135,13 @@
                     </div>
                 </li>
                 <li id="message" class="menu-item">
-                    <a th:href="@{/user/message/2}">消息<span class="has-unread" id="msg-allunread"></span></a>
+                    <a th:href="@{/user/message/2}">
+                        <svg class="icon" aria-hidden="true" style="display:inline-block;margin-right: 2px;">
+                            <use xlink:href="#icon-xinbaniconshangchuan--copy"></use>
+                        </svg>
+                        <span>消息</span>
+                        <span class="has-unread" id="msg-allunread"></span>
+                    </a>
                     <ul id="mymessage" class="layui-anim layui-anim-upbit">
                         <li><a th:href="@{/user/message/2}">私信我的<span class="unread" id="msg-pm-unread"></span></a></li>
                         <li><a th:href="@{/user/message/2}">关注我的<span class="unread" id="msg-follow-unread"></span></a></li>
@@ -145,13 +151,24 @@
                     </ul>
                 </li>
                 <li id="favorites" class="menu-item">
-                    <a th:href="@{/user/favorite}">收藏</a>
+                    <a th:href="@{/user/favorite}">
+                        <svg class="icon" aria-hidden="true" style="display:inline-block;margin-right: 2px;">
+                            <use xlink:href="#icon-wodeshoucang-copy"></use>
+                        </svg>
+                        <span>收藏</span>
+                    </a>
                     <ul id="favorite-items" class="layui-anim layui-anim-upbit">
                         <span>loading...</span>
                     </ul>
                 </li>
                 <li id="timeline" class="menu-item">
-                    <a th:href="@{/user/tofeed}">动态<span class="has-unread"></span></a>
+                    <a th:href="@{/user/tofeed}">
+                        <svg class="icon" aria-hidden="true" style="display:inline-block;margin-right: 2px;">
+                            <use xlink:href="#icon-7"></use>
+                        </svg>
+                        <span>动态</span>
+                        <span class="has-unread"></span>
+                    </a>
                     <ul id="timeline-items" class="layui-anim layui-anim-upbit">
                     </ul>
                 </li>

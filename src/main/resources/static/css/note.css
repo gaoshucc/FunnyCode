@@ -85,7 +85,7 @@ body {
 
 #content-editormd {
     min-height: 450px;
-    padding: 10px 0;
+    padding: 20px;
     border-bottom: solid 1px rgba(220, 220, 220, 1);
 }
 /*允许评论*/
@@ -478,9 +478,27 @@ body {
     color: rgba(136, 149, 166, 1);
     text-align: center;
     cursor: pointer;
+    overflow: hidden;
 }
 #report:hover, #uptoTop:hover {
     color: rgba(121, 158, 232, .91);
+}
+#report:hover::before, #uptoTop:hover::before{
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+    text-align: center;
+}
+#report:hover::before{
+    content: '举报';
+    color: #fff;
+    background-color: red;
+}
+#uptoTop:hover::before{
+    content: 'TOP';
+    background-color: #fff;
 }
 /*反馈按钮*/
 #report {
