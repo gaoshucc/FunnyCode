@@ -101,7 +101,7 @@ layui.use(['layer', 'element', 'carousel', 'form'], function () {
                                 "</svg>" : "无";
 
                         email.innerHTML = user.email != null ? user.email : "无";
-                        signature.innerHTML = user.motto != null ? user.motto : "无";
+                        signature.innerHTML = user.motto.length>0 ? user.motto : "无";
                         active.innerHTML = user.active;
                         noteCnt.innerHTML = user.noteCnt;
                         followeeCnt.innerHTML = user.followeeCnt;

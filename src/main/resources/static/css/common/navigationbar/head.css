@@ -318,9 +318,6 @@ body {
     padding-bottom: 15px;
     font-size: 14px;
 }
-
-
-
 /*动态*/
 #timeline {
     position: relative;
@@ -369,6 +366,7 @@ body {
 }
 /*原创*/
 #creation{
+    position: relative;
     display: block;
     float: left;
     width: 68px;
@@ -377,12 +375,8 @@ body {
     border-radius: 0 0 6px 6px;
     text-align: center;
     background-color: rgba(244, 90, 131, 1);
-    overflow: hidden;
 }
-#creation:hover{
-    background-color: rgba(244, 90, 131, .8);
-}
-#creation a{
+#creation > span:nth-child(1){
     display: block;
     width: 100%;
     height: 46px;
@@ -390,7 +384,81 @@ body {
     color: #fff;
     text-align: center;
 }
-#creation a:hover{
+#creation > span:nth-child(1):hover{
     color: #fff;
 }
+.hideCreaWays{
+    display: none !important;
+}
+.showCreaWays{
+    display: block !important;
+}
+#creation-ways {
+    display: block;
+    z-index: 100;
+    position: absolute;
+    top: 46px;
+    right: 0;
+    width: 225px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+    background-color: rgba(255, 255, 255, 1);
 
+    display: -webkit-box;             /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;                 /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;       /* TWEENER - IE 10 */
+    display: -webkit-flex;      /* NEW - Chrome */
+    display: flex;              /* NEW, Spec - Opera 12.1, Firefox 20+ */
+
+    -webkit-box-orient: horizontal;     /* 09版 */
+    -webkit-flex-direction: row;        /* 12版 */
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    -o-flex-direction: row;
+    flex-direction: row;
+
+    -webkit-box-pack: center;       /* 09版 */
+    -webkit-justify-content: center;        /* 12版 */
+    -moz-justify-content: center;
+    -ms-justify-content: center;
+    -o-justify-content: center;
+    justify-content: center;
+}
+#creation-ways::before{
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    content: '';
+    width: 0;
+    height: 0;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #fff transparent;
+}
+#creation-ways li{
+    display: block;
+    text-align: center;
+    list-style-type: none;
+
+    -webkit-box-flex: 1;              /* OLD - iOS 6-, Safari 3.1-6 */
+    -moz-box-flex: 1;                 /* OLD - Firefox 19- */
+    -webkit-flex: 1;                     /* Chrome */
+    -ms-flex: 1;                           /* IE 10 */
+    flex: 1;                                   /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+#creation-ways li a{
+    display: block;
+    padding: 8px 0;
+    font-size: 12px;
+    color: rgba(54, 58, 57, 1);
+}
+#creation-ways li a span{
+    display: block;
+    line-height: 20px;
+    margin: 2px 0;
+}
+#creation-ways li:hover{
+    background-color: rgba(0, 0, 0, 0.1);
+}
+#creation-ways li:hover a{
+    color: rgba(0, 161, 214, 1);
+}

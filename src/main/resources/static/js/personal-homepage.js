@@ -38,6 +38,19 @@ layui.use(['element', 'util', 'flow', 'laytpl', 'carousel'], function () {
         $("body,html").animate({scrollTop: 0}, 300);
     });
 
+    let signature = document.querySelector("#signature");
+    signature.addEventListener("blur", function (e) {
+        $.ajax({
+            type: "POST",
+            url: "/user/signature",
+            data: {"signature": signature.value},
+            dataType: "json",
+            success: function (data) {
+            },
+            async: true
+        });
+    });
+
     getAuthorFollowStatus();
     showNotes();
     element.on('tab(publish-infomation)', function(data){
@@ -184,7 +197,7 @@ layui.use(['element', 'util', 'flow', 'laytpl', 'carousel'], function () {
                     dataType: "json",
                     success: function (data) {
                         console.log(data);
-                        if(data.code === REQ_SUCC && data.data != null && data.data.notes != null){
+                        if(data.code === REQ_SUCC && data.data != null && data.data.notes != null && data.data.notes.length > 0){
                             let lis = [];
                             let renderData, template;
                             layui.each(data.data.notes, function(index, item){
@@ -203,6 +216,9 @@ layui.use(['element', 'util', 'flow', 'laytpl', 'carousel'], function () {
                             });
 
                             next(lis.join(''), page < data.data.pages);
+                        }else{
+                            let notesBox = document.querySelector("#publish-infomation-note");
+                            notesBox.innerHTML = "<div id='no-content-box'><span id='no-content-icon'><svg class='icon' aria-hidden='true'><use xlink:href='#icon-kong'></use></svg></span><span id='no-content'>空空如也，用户暂无手记</span></div>";
                         }
                     },
                     async: true
@@ -229,7 +245,7 @@ layui.use(['element', 'util', 'flow', 'laytpl', 'carousel'], function () {
                     },
                     dataType: "json",
                     success: function (data) {
-                        if(data.code === REQ_SUCC && data.data != null && data.data.feeds != null){
+                        if(data.code === REQ_SUCC && data.data != null && data.data.feeds != null && data.data.feeds.length > 0){
                             let lis = [], flag; //flag判断被转发动态是否为空（已被删除）
                             let forwordFeed, forwordFeedCreateDate, forwordFeedContent; //被转发动态信息
                             layui.each(data.data.feeds, function(index, item){
@@ -293,6 +309,9 @@ layui.use(['element', 'util', 'flow', 'laytpl', 'carousel'], function () {
                                 photos: '.feed-item-content-img-box',
                                 anim: 5
                             });
+                        }else{
+                            let notesBox = document.querySelector("#publish-infomation-feed");
+                            notesBox.innerHTML = "<div id='no-content-box'><span id='no-content-icon'><svg class='icon' aria-hidden='true'><use xlink:href='#icon-kong'></use></svg></span><span id='no-content'>空空如也，用户暂无动态</span></div>";
                         }
                     },
                     async: true

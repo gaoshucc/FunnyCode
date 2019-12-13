@@ -136,6 +136,21 @@ public class AccountController {
     }
 
     /**
+     * 修改个性签名
+     * @param signature
+     * @return
+     */
+    @PostMapping("/signature")
+    @ResponseBody
+    public Result updateSignature(@RequestParam("signature") String signature) {
+        if(userService.updateUserSignature(hostHolder.getUser().getUserId(), signature)){
+            return ResultUtil.success();
+        }else {
+            return ResultUtil.error(ExceptionEnum.UNKNOWN_EOR);
+        }
+    }
+
+    /**
      * 判断昵称是否已存在
      * @param nickname 昵称
      */

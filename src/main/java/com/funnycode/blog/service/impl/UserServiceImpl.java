@@ -6,6 +6,7 @@ import com.funnycode.blog.dao.UserDAO;
 import com.funnycode.blog.model.*;
 import com.funnycode.blog.model.VO.UserVO;
 import com.funnycode.blog.service.NoteService;
+import com.funnycode.blog.service.SensitiveService;
 import com.funnycode.blog.service.TicketService;
 import com.funnycode.blog.service.UserService;
 import com.funnycode.blog.util.BlogUtil;
@@ -32,6 +33,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private NoteService noteService;
+
+    @Autowired
+    private SensitiveService sensitiveService;
 
     @Override
     public boolean userexists(String username) {
@@ -122,7 +126,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getPasswordByUsername(String username) {
-
         return userDAO.getPasswordByUsername(username);
     }
 
@@ -159,6 +162,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUserExperience(long userId, int increment) {
         return userDAO.updateUserExperience(userId, increment) > 0;
+    }
+
+    @Override
+    public boolean updateUserSignature(long userId, String signature) {
+        return userDAO.updateUserSignature(userId, sensitiveService.filter(signature)) > 0;
     }
 
     @Override

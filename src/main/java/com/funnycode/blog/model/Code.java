@@ -11,11 +11,13 @@ public class Code {
      * 0：删除
      * 1：发布
      * 2：保存
+     * 3：被举报
      */
     public static final int COMPLETELY_DELETE = -1;
     public static final int DELETE = 0;
     public static final int PUBLISH = 1;
     public static final int SAVE = 2;
+    public static final int REPORT = 3;
 
     /**
      * 用户账号状态

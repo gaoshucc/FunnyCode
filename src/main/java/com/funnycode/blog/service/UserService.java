@@ -142,6 +142,14 @@ public interface UserService {
     boolean updateUserExperience(long userId, int increment);
 
     /**
+     * 更新个性签名
+     * @param userId 用户ID
+     * @param signature 个性签名
+     * @return 更新是否成功
+     */
+    boolean updateUserSignature(long userId, String signature);
+
+    /**
      * 查找手记类型
      * @return Result
      */

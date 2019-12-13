@@ -106,7 +106,7 @@
                                                         <use xlink:href="#icon-yonghu"></use>
                                                     </svg>
                                                 </span>
-                                        <span>个人信息</span>
+                                        <span>个人中心</span>
                                     </a>
                                 </li>
                                 <li class='funcCardItems'>
@@ -126,7 +126,7 @@
                                                         <use xlink:href="#icon-biji"></use>
                                                     </svg>
                                                 </span>
-                                        <span>我的手记</span>
+                                        <span>手记管理</span>
                                     </a>
                                 </li>
                             </ul>
@@ -164,7 +164,7 @@
                 <li id="timeline" class="menu-item">
                     <a th:href="@{/user/tofeed}">
                         <svg class="icon" aria-hidden="true" style="display:inline-block;margin-right: 2px;">
-                            <use xlink:href="#icon-7"></use>
+                            <use xlink:href="#icon-fenxiang"></use>
                         </svg>
                         <span>动态</span>
                         <span class="has-unread"></span>
@@ -173,11 +173,43 @@
                     </ul>
                 </li>
                 <li id="creation">
-                    <a th:href="@{/user/note}">原创</a>
+                    <span>原创</span>
+                    <span id="creation-ways-box" class="hideCreaWays">
+                        <ul id="creation-ways" class="layui-anim layui-anim-upbit">
+                            <li>
+                                <a th:href="@{/user/note}">
+                                    <span>
+                                        <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                            <use xlink:href="#icon-bianji"></use>
+                                        </svg>
+                                    </span>
+                                    <span>发布手记</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/user/ask}">
+                                    <span>
+                                        <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                            <use xlink:href="#icon-pinglun4"></use>
+                                        </svg>
+                                    </span>
+                                    <span>提问题</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/user/ask}">
+                                    <span>
+                                        <svg class="icon" aria-hidden="true" style="font-size: 16px">
+                                            <use xlink:href="#icon-shangchuan"></use>
+                                        </svg>
+                                    </span>
+                                    <span>分享资源</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </span>
                 </li>
-                <!--
-                <li class="menu-item"><a href="#">历史记录</a></li>
-                -->
+                <!--<li class="menu-item"><a href="#">历史记录</a></li>-->
             </ul>
         </script>
         <script type="text/javascript" th:src="@{/js/common/navigationbar/head.js}"></script>

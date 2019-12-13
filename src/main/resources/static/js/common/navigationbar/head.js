@@ -24,6 +24,32 @@ layui.use(['layer', 'flow', 'util', 'laytpl', 'element'], function () {
     });
 
     /**
+     * 原创方式动画
+     */
+    function creationAnim(){
+        let creation = document.querySelector("#creation"),
+            creationWays = document.querySelector("#creation-ways-box");
+        //鼠标悬浮
+        creation.addEventListener('mouseover', function (e) {
+            e = window.event || e;
+            let s = e.fromElement || e.relatedTarget;
+            if (!this.contains(s)) {
+                creationWays.classList.remove("hideCreaWays");
+                creationWays.classList.add("showCreaWays");
+            }
+        }, false);
+        //鼠标移开
+        creation.addEventListener('mouseout', function (e) {
+            e = window.event || e;
+            let s = e.toElement || e.relatedTarget;
+            if (!this.contains(s)) {
+                creationWays.classList.remove("showCreaWays");
+                creationWays.classList.add("hideCreaWays");
+            }
+        }, false);
+    }
+
+    /**
      * 定期执行函数
      */
     function regularInterval() {
@@ -57,6 +83,7 @@ layui.use(['layer', 'flow', 'util', 'laytpl', 'element'], function () {
                         menu.innerHTML = menu.innerHTML + html;
                     });
                     //已登录执行操作
+                    creationAnim();
                     regularInterval();
                     getMsgUnreadCntEach();
                     showUserDetail();

@@ -128,7 +128,7 @@
                         </span>
                         <span th:text="${owner.experience}"></span>
                     </div>
-                    <div th:data-id="${owner.userId}" th:text="${owner.motto==''?'暂无个性签名':owner.motto}"></div>
+                    <input id="signature" th:data-id="${owner.userId}" th:placeholder="编辑个性签名" th:value="${owner.motto}">
                 </div>
             </div>
             <div id="personal-basic-operate">
@@ -141,8 +141,18 @@
         <div id="original-content">
             <div class="layui-tab layui-tab-brief" lay-filter="publish-infomation">
                 <ul class="layui-tab-title">
-                    <li class="layui-this">手记</li>
-                    <li>动态</li>
+                    <li class="layui-this" style="vertical-align: middle">
+                        <svg class="icon" aria-hidden="true" style="display:inline-block;margin-right: 2px;">
+                            <use xlink:href="#icon-biji-copy"></use>
+                        </svg>
+                        <span>手记</span>
+                    </li>
+                    <li>
+                        <svg class="icon" aria-hidden="true" style="display:inline-block;margin-right: 2px;">
+                            <use xlink:href="#icon-7"></use>
+                        </svg>
+                        <span>动态</span>
+                    </li>
                 </ul>
                 <div class="layui-tab-content">
                     <div id="publish-infomation-note" class="layui-tab-item layui-show"></div>

@@ -30,19 +30,10 @@ layui.use(['layer'], function () {
 
     function showFunc() {
         let status = document.querySelector("#status").value;
-        let funcBar = document.querySelector("#funcBar");
+
+        document.querySelector("#save").addEventListener("click", save);
         if(status === '2'){
-            funcBar.innerHTML = funcBar.innerHTML +
-                "<a class='func' id='publish' title='发布手记'>发布手记</a>" +
-                "<a class='func' id='save' title='保存手记，下次继续编写'>保存手记</a>" +
-                "<a class='func' id='delete' href='/user/mynotes' title='取消本次编辑，且所有修改不保存，该操作不可恢复'>取消</a>";
-            document.querySelector("#save").addEventListener("click", save);
             document.querySelector("#publish").addEventListener("click", publish);
-        }else if(status === '1'){
-            funcBar.innerHTML = funcBar.innerHTML +
-                "<a class='func' id='save' title='保存更改'>保存手记</a>" +
-                "<a class='func' id='delete' href='/user/mynotes' title='取消本次编辑，且所有修改不保存，该操作不可恢复'>取消</a>";
-            document.querySelector("#save").addEventListener("click", save);
         }
     }
 

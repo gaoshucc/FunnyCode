@@ -18,7 +18,7 @@ import java.util.List;
 public interface UserDAO {
     String TABLE_NAME = "user";
     String INSERT_FIELDS = "username, password, nickname, status, last_logintime, role, profile_path, gender, experience, motto, regtime, salt, email";
-    String SELECT_FIELDS = "user_id, username, password, nickname, status, last_logintime, role, profile_path, gender, experience, motto, regtime, salt, email";
+    String SELECT_FIELDS = "user_id, " + INSERT_FIELDS;
 
     /**
      * 判断用户是否已存在
@@ -154,4 +154,13 @@ public interface UserDAO {
      */
     @Select({"SELECT user_id, nickname, profile_path FROM ",TABLE_NAME," WHERE user_id = #{userId}"})
     User getObserverById(Long userId);
+
+    /**
+     * 更新个性签名
+     * @param userId 用户ID
+     * @param signature 个性签名
+     * @return 影响行数
+     */
+    @Update({"update ", TABLE_NAME, " set motto=#{signature} where user_id=#{userId}"})
+    int updateUserSignature(long userId, String signature);
 }

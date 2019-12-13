@@ -11,7 +11,7 @@
         padding: 0 calc((100% - 930px) / 2);
     }
 
-    #container {
+    #secondary-menu, #container {
         width: 930px;
     }
 
@@ -30,7 +30,7 @@
         width: 100%;
         padding: 0 calc((100% - 900px) / 2);
     }
-    #container {
+    #secondary-menu, #container {
         width: 900px;
     }
     #top {

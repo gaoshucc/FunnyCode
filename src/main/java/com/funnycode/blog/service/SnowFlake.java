@@ -23,13 +23,12 @@ public class SnowFlake {
      * 数据中心占用的位数
      */
     private final static long DATACENTER_BIT = 5;
-
     /**
      * 每一部分的最大值
      */
-    private final static long MAX_DATACENTER_NUM = -1L ^ (-1L << DATACENTER_BIT);
-    private final static long MAX_MACHINE_NUM = -1L ^ (-1L << MACHINE_BIT);
     private final static long MAX_SEQUENCE = -1L ^ (-1L << SEQUENCE_BIT);
+    private final static long MAX_MACHINE_NUM = -1L ^ (-1L << MACHINE_BIT);
+    private final static long MAX_DATACENTER_NUM = -1L ^ (-1L << DATACENTER_BIT);
 
     /**
      * 每一部分向左的位移
