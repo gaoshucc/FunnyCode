@@ -21,9 +21,11 @@ public interface FeedService {
 
     boolean minusFeedCommentCnt(long feedId);
 
-    boolean addFeedForwordCnt(Long feedId);
+    boolean addFeedForwordCnt(long feedId);
 
-    boolean minusFeedForwordCnt(Long feedId);
+    boolean minusFeedForwordCnt(long feedId);
 
-    boolean removeFeed(Feed feed, Long userId);
+    boolean updateForwordCntById(long feedId, long offset);
+
+    boolean removeFeed(Feed feed, long userId);
 }

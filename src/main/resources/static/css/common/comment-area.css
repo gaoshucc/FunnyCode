@@ -1,6 +1,6 @@
 /*动态评论区样式*/
 .comment-area{
-    border-top: solid 1px rgba(220, 220, 220, 1);
+    /*border-top: solid 1px rgba(220, 220, 220, 1);*/
 }
 /*评论区为空*/
 #no-comments{

@@ -269,7 +269,7 @@ layui.use(['layer', 'element', 'util', 'layedit', 'flow'], function () {
                                 "<span class='personal-letter-item' data-id='"+ conversations[i].conversationId +"' data-nickname='"+ conversations[i].nickname +"'>" +
                                 "<img src='"+ conversations[i].profilePath +"'>" +
                                 "<span class='pluser-nickname'>"+ conversations[i].nickname +"</span>" +
-                                "<span class='pluser-msg'>"+ conversations[i].message +"</span>" +
+                                "<span class='pluser-msg' title='"+ conversations[i].message +"'>"+ conversations[i].message +"</span>" +
                                 unreadHtml +
                                 "</span>";
                         }
@@ -344,6 +344,7 @@ layui.use(['layer', 'element', 'util', 'layedit', 'flow'], function () {
                             if(lis.length > 0){
                                 msgList.scrollTop = msgList.scrollHeight; //滚动到底部
                                 that.getElementsByClassName("pluser-msg")[0].innerHTML = lastMsgContent;  //更新最新消息
+                                that.getElementsByClassName("pluser-msg")[0].title = lastMsgContent;
                                 //更新未读消息数
                                 if(newMsgCnt > 0){
                                     let unreadCnt = that.getElementsByClassName("conversation-unread-cnt")[0];

@@ -14,7 +14,12 @@ public interface FeedbackDAO {
     String INSERT_FIELDS = " content, user_id ";
     String SELECT_FIELDS = " id, " + INSERT_FIELDS;
 
+    /**
+     * 创建反馈
+     * @param feedback 反馈
+     * @return
+     */
     @Insert({"INSERT INTO ", TABLE_NAME, "(", INSERT_FIELDS, ")",
             " VALUES(#{content}, #{userId})"})
-    int addFeedback(Feedback feedback);
+    int add(Feedback feedback);
 }

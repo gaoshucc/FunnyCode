@@ -1,7 +1,7 @@
 package com.funnycode.blog.service;
 
 import com.funnycode.blog.model.Comment;
-import com.funnycode.blog.model.VO.CommentVO;
+import com.funnycode.blog.model.vo.CommentVO;
 
 import java.util.List;
 

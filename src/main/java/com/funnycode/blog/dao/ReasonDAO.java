@@ -18,10 +18,19 @@ public interface ReasonDAO {
     String INSERT_FIELDS = " reason_id, reason ";
     String SELECT_FIELDS = " reason_id, reason ";
 
+    /**
+     * 创建举报原因
+     * @param reason 举报原因
+     * @return 影响行数
+     */
     @Insert({"INSERT INTO ", TABLE_NAME, "(", INSERT_FIELDS, ")",
             " VALUES(#{reasonId}, #{reason})"})
-    int addReason(Reason reason);
+    int add(Reason reason);
 
+    /**
+     * 获取举报原因列表
+     * @return 举报原因列表
+     */
     @Select({"SELECT ", SELECT_FIELDS, " FROM ", TABLE_NAME})
-    List<Reason> getAllReasons();
+    List<Reason> findAll();
 }

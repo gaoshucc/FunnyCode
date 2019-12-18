@@ -11,6 +11,7 @@ import org.springframework.lang.Nullable;
 public abstract class FunnycodeException extends RuntimeException {
 
     private Object errorData;
+
     public FunnycodeException(String message){
          super(message);
     }

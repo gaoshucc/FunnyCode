@@ -5,7 +5,7 @@ import com.funnycode.blog.async.EventModel;
 import com.funnycode.blog.async.EventProducer;
 import com.funnycode.blog.async.EventType;
 import com.funnycode.blog.model.*;
-import com.funnycode.blog.model.VO.UserVO;
+import com.funnycode.blog.model.vo.UserVO;
 import com.funnycode.blog.service.FollowService;
 import com.funnycode.blog.service.UserService;
 import com.funnycode.blog.util.ResultUtil;

@@ -26,65 +26,63 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public boolean addMessage(Message message) {
         message.setContent(sensitiveService.filter(message.getContent()));
-        return messageDAO.addMessage(message) > 0;
+        return messageDAO.add(message) > 0;
     }
 
     @Override
     public int getMessageCount(String conversationId) {
-        return messageDAO.getMessageCount(conversationId);
+        return messageDAO.countByConversationId(conversationId);
     }
 
     @Override
     public List<Message> getConversationDetailInit(String conversationId, int offset, int limit) {
-        return messageDAO.getConversationDetailInit(conversationId, offset, limit);
+        return messageDAO.findLimitByConversationId(conversationId, offset, limit);
     }
 
     @Override
     public List<Message> getConversationDetail(String conversationId, int offset, int limit, Date firstTime) {
-        return messageDAO.getConversationDetail(conversationId, offset, limit, firstTime);
+        return messageDAO.findPreviouslyByConversationId(conversationId, offset, limit, firstTime);
     }
 
     @Override
     public List<Message> getConversationDetailRegular(String conversationId, Date lastTime) {
-        return messageDAO.getConversationDetailRegular(conversationId, lastTime);
+        return messageDAO.findNewestByConversationId(conversationId, lastTime);
     }
 
     @Override
     public List<Message> getConversationList(long userId, int offset, int limit) {
-        return  messageDAO.getConversationList(userId, offset, limit);
+        return  messageDAO.findAllConversationByUserId(userId, offset, limit);
     }
 
     @Override
     public List<Message> listMessageByType(long userId, int type, int offset, int limit) {
-        return messageDAO.listMessageByType(userId, type, offset, limit);
+        return messageDAO.findAllByUserIdAndType(userId, type, offset, limit);
     }
 
     @Override
     public int getConversationUnreadCount(long userId, String conversationId) {
-        return messageDAO.getConversationUnreadCount(userId, conversationId);
+        return messageDAO.countUnreadByUserIdAndConversationId(userId, conversationId);
     }
 
     @Override
     public long getMessageUnreadCount(long userId, int type){
-        long unread = messageDAO.getMessageUnreadCount(userId, type);
+        long unread = messageDAO.countUnreadByUserIdAndType(userId, type);
 
         return unread;
     }
 
     @Override
     public long getMessageAllUnreadCount(long userId){
-        long unread = messageDAO.getMessageAllUnreadCount(userId);
-
-        return unread;
+        return messageDAO.countUnreadByUserId(userId);
     }
 
     @Override
     public int updateMessageHasread(long userId, int type){
-        return messageDAO.updateMessageHasread(userId, type);
+        return messageDAO.updateHasreadByUserIdAndType(userId, type);
     }
 
     @Override
     public int updatePersonalMessageHasread(String conversationId, long userId) {
-        return messageDAO.updatePersonalMessageHasread(conversationId, userId);
+        return messageDAO.updateHasreadByUserIdAndConversationId(conversationId, userId);
     }
 }

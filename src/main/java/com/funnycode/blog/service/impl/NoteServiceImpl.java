@@ -32,73 +32,73 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public int addNote(Note note) {
         userService.updateUserExperience(note.getUserId(), 100);
-        return noteDAO.addNote(note);
+        return noteDAO.add(note);
     }
 
     @Override
     public int updateNote(Note note) {
-        return noteDAO.updateNote(note);
+        return noteDAO.updateByNote(note);
     }
 
     @Override
     public List<NoteType> getNoteType() {
-        return noteDAO.getNoteType();
+        return noteDAO.findAllType();
     }
 
     @Override
     public String getNoteTypeById(int typeId){
-        return noteDAO.getNoteTypeById(typeId);
+        return noteDAO.getTypeByTypeId(typeId);
     }
 
     @Override
     public Note getNote(long noteId) {
-        return noteDAO.getNoteById(noteId);
+        return noteDAO.getById(noteId);
     }
 
     @Override
     public List<Note> findNotes(int offset, int limit) {
-        return noteDAO.selectNotes(offset, limit);
+        return noteDAO.findLimit(offset, limit);
     }
 
     @Override
     public List<Note> findUserAllNotes(Long userId, int offset, int limit) {
-        return noteDAO.selectUserNotes(userId, offset, limit);
+        return noteDAO.findLimitByUserId(userId, offset, limit);
     }
 
     @Override
     public int getNoteCount(long userId) {
-        return noteDAO.getNoteCount(userId);
+        return noteDAO.countByUserId(userId);
     }
 
     @Override
     public int getNotesCount() {
-        return noteDAO.getNotesCount();
+        return noteDAO.countAll();
     }
 
     @Override
     public boolean addNoteComentCnt(long noteId) {
-        return noteDAO.addNoteComentCnt(noteId) > 0;
+        return noteDAO.updateCommentCntById(noteId, 1L) > 0;
     }
 
     @Override
     public boolean minusNoteComentCnt(long noteId) {
-        return noteDAO.minusNoteComentCnt(noteId) > 0;
+        return noteDAO.updateCommentCntById(noteId, -1L) > 0;
     }
 
     @Override
     public List<Note> listUserNotesByStatus(Long userId, Integer status, int offset, int limit) {
-        return noteDAO.listUserNotesByStatus(userId, status, offset, limit);
+        return noteDAO.findAllByUserIdAndStatus(userId, status, offset, limit);
     }
 
     @Override
     public int updateNoteStatus(Long userId, Long noteId, Integer status, Integer expect){
-        return noteDAO.updateNoteStatus(userId, noteId, status, expect);
+        return noteDAO.updateStatus(userId, noteId, status, expect);
     }
 
     @Override
     public int publishSavedNote(Note note) {
         userService.updateUserExperience(note.getUserId(), 100);
-        return noteDAO.publishSavedNote(note);
+        return noteDAO.updateByNote(note);
     }
 
     @Override

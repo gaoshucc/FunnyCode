@@ -3,7 +3,7 @@ package com.funnycode.blog.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.funnycode.blog.model.*;
-import com.funnycode.blog.model.VO.*;
+import com.funnycode.blog.model.vo.*;
 import com.funnycode.blog.service.MessageService;
 import com.funnycode.blog.service.UserService;
 import com.funnycode.blog.util.ResultUtil;

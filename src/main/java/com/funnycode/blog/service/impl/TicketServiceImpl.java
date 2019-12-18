@@ -17,16 +17,16 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public int addTicket(Ticket ticket) {
-        return ticketDAO.addTicket(ticket);
+        return ticketDAO.add(ticket);
     }
 
     @Override
     public Ticket selectByTicket(String ticket) {
-        return ticketDAO.selectByTicket(ticket);
+        return ticketDAO.getByToken(ticket);
     }
 
     @Override
     public void updateStatus(String ticket, int status) {
-        ticketDAO.updateStatus(ticket, status);
+        ticketDAO.updateStatusByToken(ticket, status);
     }
 }

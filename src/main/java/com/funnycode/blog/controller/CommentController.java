@@ -6,7 +6,7 @@ import com.funnycode.blog.async.EventModel;
 import com.funnycode.blog.async.EventProducer;
 import com.funnycode.blog.async.EventType;
 import com.funnycode.blog.model.*;
-import com.funnycode.blog.model.VO.CommentVO;
+import com.funnycode.blog.model.vo.CommentVO;
 import com.funnycode.blog.service.CommentService;
 import com.funnycode.blog.service.NoteService;
 import com.funnycode.blog.service.SensitiveService;

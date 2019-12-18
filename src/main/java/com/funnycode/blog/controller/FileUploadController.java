@@ -50,8 +50,8 @@ public class FileUploadController {
 
     /**
      * layedit图片上传接口
-     * @param feedPic
-     * @return
+     * @param feedPic 动态图片
+     * @return json
      */
     @PostMapping("/feedpic")
     @ResponseBody

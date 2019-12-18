@@ -4,7 +4,7 @@ import com.funnycode.blog.dao.CommentDAO;
 import com.funnycode.blog.model.Code;
 import com.funnycode.blog.model.Comment;
 import com.funnycode.blog.model.EntityType;
-import com.funnycode.blog.model.VO.CommentVO;
+import com.funnycode.blog.model.vo.CommentVO;
 import com.funnycode.blog.service.CommentService;
 import com.funnycode.blog.service.FeedService;
 import com.funnycode.blog.service.NoteService;
@@ -33,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public boolean addComment(Comment comment) {
         //todo 对于不同类型的实体，需要进行不同的增加评论数
-        if(commentDAO.addComment(comment) > 0){
+        if(commentDAO.add(comment) > 0){
             if(comment.getEntityType() == EntityType.ENTITY_NOTE){
                 return noteService.addNoteComentCnt(comment.getEntityId());
             }else if (comment.getEntityType() == EntityType.ENTITY_FEED){
@@ -47,17 +47,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public boolean removeAllComment(Integer entityType, Long entityId) {
-        return commentDAO.removeAllComment(entityType, entityId) > 0;
+        return commentDAO.removeAllByEntity(entityType, entityId) > 0;
     }
 
     @Override
     public Comment getCommentById(long id) {
-        return commentDAO.getCommentById(id);
+        return commentDAO.getById(id);
     }
 
     @Override
     public List<CommentVO> selectCommentsByEntity(int entityType, long entityId, long id) {
-        return commentDAO.selectCommentsByEntity(entityType, entityId, id);
+        return commentDAO.findAllByEntityAndParentId(entityType, entityId, id);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public boolean updateCommentDeleted(Comment comment) {
         //todo 对于不同类型的实体，需要进行不同的减少评论数
-        if(commentDAO.updateCommentState(comment.getId(), Code.COMMENT_HASDELETE, Code.DELETE_COMMENT) > 0){
+        if(commentDAO.updateStatusById(comment.getId(), Code.COMMENT_HASDELETE, Code.DELETE_COMMENT) > 0){
             if(comment.getEntityType() == EntityType.ENTITY_NOTE){
                 return noteService.minusNoteComentCnt(comment.getEntityId());
             }else if(comment.getEntityType() == EntityType.ENTITY_FEED){

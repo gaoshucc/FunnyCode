@@ -3,7 +3,7 @@ package com.funnycode.blog.service;
 import com.funnycode.blog.model.Note;
 import com.funnycode.blog.model.Result;
 import com.funnycode.blog.model.User;
-import com.funnycode.blog.model.VO.UserVO;
+import com.funnycode.blog.model.vo.UserVO;
 
 import java.util.List;
 import java.util.Map;
@@ -77,14 +77,6 @@ public interface UserService {
      * @return User
      */
     User getUserByUsername(String username);
-
-    /**
-     * 通过用户查找用户
-     *
-     * @param username
-     * @return String
-     */
-    String getPasswordByUsername(String username);
 
     /**
      * 通过userId获得用户

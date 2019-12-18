@@ -17,6 +17,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public boolean addFeedback(Feedback feedback) {
-        return feedbackDAO.addFeedback(feedback) > 0;
+        return feedbackDAO.add(feedback) > 0;
     }
 }

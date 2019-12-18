@@ -33,18 +33,20 @@ layui.use(['layer', 'layedit', 'flow', 'carousel', 'util', 'laytpl'], function (
         arrow: 'hover',
         indicator: 'inside'
     });
-
-    /*layedit.set({
+    //设置layui编辑器图片上传路径
+    layedit.set({
         uploadImage: {
             url: '/user/file/feedpic',
             type: 'post'
         }
-    });*/
+    });
     let original = layedit.build('editor-input', {
         height: 100,
         tool: [
-            'face' //表情
-        ]
+            'face', //表情
+            'feedImage' //动态图片
+        ],
+        btn: '<span class="layui-layedit-submit-btn" id="editor-submit">发布</span>'
     });
 
     //为“发布动态”按钮绑定事件
@@ -56,22 +58,32 @@ layui.use(['layer', 'layedit', 'flow', 'carousel', 'util', 'laytpl'], function (
             setTimeout(function () {
                 isClickSendBtn = true;
             }, 1500);
+            //同步编辑器内容
             layedit.sync(original);
-            let content = document.querySelector("#editor-input").value;
-            if(content === null || content.length <= 0){
+            let formData = new FormData(),
+                content = document.querySelector("#editor-input").value,
+                srcArrInput = document.querySelector("#upload-file-array");
+            //若是图片动态，则获取图片信息
+            if(srcArrInput && !isNullStr(srcArrInput.value)){
+                console.log(srcArrInput.value);
+                let srcArr = srcArrInput.value.split(","),
+                    feedImgContent = "<span class='feed-item-content-img-box'>";
+                for(let i=0; i<srcArr.length; i++){
+                    feedImgContent = feedImgContent + "<img src='"+ srcArr[i] +"' class='feed-item-content-img' title='查看图片'>";
+                }
+                feedImgContent = feedImgContent + "</span>";
+                content = content + feedImgContent;
+            }
+            if(content == null || content.length <= 0){
                 layer.msg("动态内容不能为空", {
                     time: 2500
                 });
                 return;
             }
+            formData.append("content", content);
             let index = layer.load(1, {
                 shade: [0.4,'#000'] //0.1透明度的白色背景
             });
-            let formData = new FormData();
-            formData.append("content", content);
-            for (let i = 0; i < curFiles.length; i++) {
-                formData.append("fileArray", curFiles[i]);
-            }
             $.ajax({
                 type: "post",
                 url: "/user/feed/original",
@@ -96,60 +108,6 @@ layui.use(['layer', 'layedit', 'flow', 'carousel', 'util', 'laytpl'], function (
         }
     });
 
-    let imgBar = document.querySelector("#img-bar"),
-        uploadFeedImg = document.querySelector("#feed-img-input");
-    uploadFeedImg.addEventListener("change", function (e) {
-        setImagePreview(this, imgBar);
-    });
-
-    let imgNum = 0, curFiles = [];      //存放上传图片列表
-    function setImagePreview(uploadFeedImgEle, imgBar) {
-        for(let i=0; i<9; i++){
-            if(curFiles.length >= 9){
-                layer.msg("最多只能上传9张图片哦", {
-                    time: 2500
-                });
-                return;
-            }
-            if (uploadFeedImgEle.files && uploadFeedImgEle.files[i]) {
-                let imgObjPreview = new Image();
-                imgObjPreview.src = getImgUrl(uploadFeedImgEle.files[i]);
-                let newImg = document.createElement("span");    //图片栏添加图片预览
-                newImg.classList.add("delete-img-btn");
-                newImg.title = "点击删除该图片";
-                newImg.appendChild(imgObjPreview);
-                imgBar.insertBefore(newImg, imgBar.firstElementChild);
-                newImg.onclick = function (e) {
-                    removeImg(this, uploadFeedImgEle.files[i].name);
-                };
-                curFiles.push(uploadFeedImgEle.files[i]);
-                imgNum++;
-            }
-        }
-    }
-    //移除图片
-    function removeImg(ele, filename) {
-        let imgBar = document.querySelector("#img-bar");
-        imgBar.removeChild(ele);
-        curFiles = curFiles.filter(function(file) {
-            return file.name !== filename;
-        });
-        console.log(curFiles);
-    }
-    //获取input[file]图片的url
-    function getImgUrl(file) {
-        let url;
-        let agent = navigator.userAgent;
-        if (agent.indexOf("MSIE")>=1) {
-            url = file.value;
-        } else if(agent.indexOf("Firefox")>0) {
-            url = window.URL.createObjectURL(file);
-        } else if(agent.indexOf("Chrome")>0) {
-            url = window.URL.createObjectURL(file);
-        }
-        return url;
-    }
-
     flow.load({
         elem: '#feeds-block',
         scrollElem: document,
@@ -167,9 +125,9 @@ layui.use(['layer', 'layedit', 'flow', 'carousel', 'util', 'laytpl'], function (
                 dataType: "json",
                 success: function (data) {
                     if(data.code === REQ_SUCC && data.data != null && data.data.feeds != null){
-                        let lis = [], currentUser = document.querySelector("#current-user").value;
-                        let self, flag; //flag判断被转发动态是否为空（已被删除）
-                        let forwordFeed, forwordFeedCreateDate, forwordFeedContent; //被转发动态信息
+                        let lis = [], currentUser = document.querySelector("#current-user").value,
+                            self, flag, //self是否为用户本人动态，flag判断被转发动态是否为空（已被删除）
+                            forwordFeed, forwordFeedCreateDate, forwordFeedContent; //被转发动态信息
                         layui.each(data.data.feeds, function(index, item){
                             let createTime = util.timeAgo(item.createdDate, false);
                             let map = JSON.parse(item.data);
@@ -241,3 +199,59 @@ layui.use(['layer', 'layedit', 'flow', 'carousel', 'util', 'laytpl'], function (
         }
     });
 });
+
+/*
+    let imgBar = document.querySelector("#img-bar"),
+        uploadFeedImg = document.querySelector("#feed-img-input");
+    uploadFeedImg.addEventListener("change", function (e) {
+        setImagePreview(this, imgBar);
+    });
+
+    let imgNum = 0, curFiles = [];      //存放上传图片列表
+    function setImagePreview(uploadFeedImgEle, imgBar) {
+        for(let i=0; i<9; i++){
+            if(curFiles.length >= 9){
+                layer.msg("最多只能上传9张图片哦", {
+                    time: 2500
+                });
+                return;
+            }
+            if (uploadFeedImgEle.files && uploadFeedImgEle.files[i]) {
+                let imgObjPreview = new Image();
+                imgObjPreview.src = getImgUrl(uploadFeedImgEle.files[i]);
+                let newImg = document.createElement("span");    //图片栏添加图片预览
+                newImg.classList.add("delete-img-btn");
+                newImg.title = "点击删除该图片";
+                newImg.appendChild(imgObjPreview);
+                imgBar.insertBefore(newImg, imgBar.firstElementChild);
+                newImg.onclick = function (e) {
+                    removeImg(this, uploadFeedImgEle.files[i].name);
+                };
+                curFiles.push(uploadFeedImgEle.files[i]);
+                imgNum++;
+            }
+        }
+    }
+    //移除图片
+    function removeImg(ele, filename) {
+        let imgBar = document.querySelector("#img-bar");
+        imgBar.removeChild(ele);
+        curFiles = curFiles.filter(function(file) {
+            return file.name !== filename;
+        });
+        console.log(curFiles);
+    }
+    //获取input[file]图片的url
+    function getImgUrl(file) {
+        let url;
+        let agent = navigator.userAgent;
+        if (agent.indexOf("MSIE")>=1) {
+            url = file.value;
+        } else if(agent.indexOf("Firefox")>0) {
+            url = window.URL.createObjectURL(file);
+        } else if(agent.indexOf("Chrome")>0) {
+            url = window.URL.createObjectURL(file);
+        }
+        return url;
+    }
+    */

@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.funnycode.blog.dao.NoteDAO">
-    <!--
-    String TABLE_NAME = "note";
-    String INSERT_FIELDS = " title, type, user_id, create_time, status, content ";
-    String SELECT_FIELDS = " id, " + INSERT_FIELDS;
-    -->
     <sql id="table">note</sql>
     <sql id="selectFields">id, title, type, user_id, create_time, status, content, comment_cnt</sql>
-    <select id="selectNotes" resultType="com.funnycode.blog.model.Note">
+
+    <!--更新手记-->
+    <update id="updateByNote">
+        UPDATE
+        <include refid="table"/>
+        SET title=#{title},type=#{type},create_time=#{createTime},content=#{content}
+        <if test="status != null">
+            ,status=#{status}
+        </if>
+        WHERE id=#{id} AND user_id=#{userId}
+    </update>
+
+    <!--获取部分手记-->
+    <select id="findLimit" resultType="com.funnycode.blog.model.Note">
         SELECT
         <include refid="selectFields"/>
         FROM
@@ -18,7 +26,8 @@
         LIMIT #{offset},#{limit}
     </select>
 
-    <select id="selectUserNotes" resultType="com.funnycode.blog.model.Note">
+    <!--获取用户部分手记-->
+    <select id="findLimitByUserId" resultType="com.funnycode.blog.model.Note">
         SELECT
         <include refid="selectFields"/>
         FROM
@@ -28,7 +37,7 @@
         LIMIT #{offset},#{limit}
     </select>
 
-    <!--listUserNotesByStatus-->
+    <!--获取用户某一状态的所有手记-->
     <select id="listUserNotesByStatus" resultType="com.funnycode.blog.model.Note">
         SELECT
         <include refid="selectFields"/>

@@ -7,20 +7,17 @@ import com.funnycode.blog.async.EventModel;
 import com.funnycode.blog.async.EventType;
 import com.funnycode.blog.async.producer.MessageEventProducer;
 import com.funnycode.blog.model.*;
-import com.funnycode.blog.model.VO.CommentVO;
-import com.funnycode.blog.model.VO.FeedVO;
+import com.funnycode.blog.model.vo.CommentVO;
+import com.funnycode.blog.model.vo.FeedVO;
 import com.funnycode.blog.service.*;
 import com.funnycode.blog.util.JedisAdapter;
-import com.funnycode.blog.util.QiniuUploadUtil;
 import com.funnycode.blog.util.RedisKeyUtil;
 import com.funnycode.blog.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.*;
@@ -64,9 +61,8 @@ public class FeedController {
 
     @PostMapping("/user/feed/original")
     @ResponseBody
-    public Result addOriginalFeed(@RequestParam("content") @NotBlank(message = "动态内容不能为空") String content,
-                                  HttpServletRequest request) throws Exception {
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+    public Result addOriginalFeed(@RequestParam("content") @NotBlank(message = "动态内容不能为空") String content) throws Exception {
+        /*MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
         StringBuilder imgContent = new StringBuilder();
         List<MultipartFile> files = multipartRequest.getFiles("fileArray");
         if(files.size() > 0){
@@ -75,8 +71,8 @@ public class FeedController {
                 String url = QiniuUploadUtil.uploadFile(file, null);
                 imgContent.append("<img src='").append(url).append("' class='feed-item-content-img' title='查看图片'>");
             }
-            imgContent.append("<span>");
-        }
+            imgContent.append("</span>");
+        }*/
         User user = hostHolder.getUser();
         Feed feed = new Feed();
         feed.setUserId(user.getUserId());
@@ -86,10 +82,9 @@ public class FeedController {
         feed.setCommentCnt(0L);
         Map<String, Object> map = new HashMap<>();
         map.put("nickname", user.getNickname());
-        map.put("content", sensitiveService.filter(content) + imgContent.toString());
+        map.put("content", content);
         feed.setData(JSON.toJSONString(map));
-        boolean ret = feedService.addOriginalFeed(feed);
-        if(ret){
+        if(feedService.addOriginalFeed(feed)){
             eventProducer.sendEvent(new EventModel(EventType.FEED)
                     .setActorId(user.getUserId())
                     .setEntityType(EntityType.ENTITY_FEED)

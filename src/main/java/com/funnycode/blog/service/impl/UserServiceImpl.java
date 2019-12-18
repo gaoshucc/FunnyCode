@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.funnycode.blog.configration.Constants;
 import com.funnycode.blog.dao.UserDAO;
 import com.funnycode.blog.model.*;
-import com.funnycode.blog.model.VO.UserVO;
+import com.funnycode.blog.model.vo.UserVO;
 import com.funnycode.blog.service.NoteService;
 import com.funnycode.blog.service.SensitiveService;
 import com.funnycode.blog.service.TicketService;
@@ -39,21 +39,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean userexists(String username) {
-        int exists = userDAO.userexists(username);
+        int exists = userDAO.existsByUsername(username);
 
         return exists > 0;
     }
 
     @Override
     public boolean nicknameexists(String nickname) {
-        int exists = userDAO.nicknameexists(nickname);
+        int exists = userDAO.existsByNickname(nickname);
 
         return exists > 0;
     }
 
     @Override
     public boolean nicknameexistsExcept(String nickname, Long exceptId) {
-        return userDAO.nicknameexistsExcept(nickname, exceptId) > 0;
+        return userDAO.existsByNicknameAndExceptId(nickname, exceptId) > 0;
     }
 
     @Override
@@ -69,9 +69,9 @@ public class UserServiceImpl implements UserService {
         user.setExperience(100L);
         user.setRegtime(new Date());
         user.setStatus(Code.REGISTING);
-        userDAO.addUser(user);
+        userDAO.add(user);
 
-        User register = userDAO.getUserByUsername(user.getUsername());
+        User register = userDAO.getByUsername(user.getUsername());
 
         return register.getUserId();
     }
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> login(String username, String password) {
         Map<String, Object> map = new HashMap<>();
-        User user = userDAO.getUserByUsername(username);
+        User user = userDAO.getByUsername(username);
         if (user == null || !BlogUtil.MD5(password+user.getSalt()).equals(user.getPassword())) {
             return map;
         }
@@ -121,17 +121,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) {
-        return userDAO.getUserByUsername(username);
-    }
-
-    @Override
-    public String getPasswordByUsername(String username) {
-        return userDAO.getPasswordByUsername(username);
+        return userDAO.getByUsername(username);
     }
 
     @Override
     public User getUserByUserId(long userId) {
-        return userDAO.getUserByUserId(userId);
+        return userDAO.getByUserId(userId);
     }
 
     @Override
@@ -141,7 +136,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserVO> getUserVOSByNickname(String nickname, Long userId) {
-        return userDAO.getUserVOSByNickname(nickname, userId);
+        return userDAO.findAllUserVOByNickname(nickname, userId);
     }
 
     @Override
@@ -156,17 +151,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updateUserInfo(String profilePath, String nickname, String email, String motto, Integer gender, Long userId) {
-        return userDAO.updateUserInfo(profilePath, nickname, email, motto, gender, userId) > 0;
+        User user = new User();
+        user.setUserId(userId);
+        user.setGender(gender);
+        user.setMotto(motto);
+        user.setEmail(email);
+        user.setNickname(nickname);
+        user.setProfilePath(profilePath);
+        return userDAO.updateByUser(user) > 0;
     }
 
     @Override
     public boolean updateUserExperience(long userId, int increment) {
-        return userDAO.updateUserExperience(userId, increment) > 0;
+        return userDAO.updateExperienceByUserId(userId, increment) > 0;
     }
 
     @Override
     public boolean updateUserSignature(long userId, String signature) {
-        return userDAO.updateUserSignature(userId, sensitiveService.filter(signature)) > 0;
+        return userDAO.updateSignatureByUserId(userId, sensitiveService.filter(signature)) > 0;
     }
 
     @Override

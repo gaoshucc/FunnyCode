@@ -7,21 +7,14 @@ import java.util.Date;
  * @date 2019-09-20 22:24
  */
 public class Note {
-    private long id;
+    private Long id;
     private String title;
-    private int type;
+    private Integer type;
     private Long userId;
     private Date createTime;
-
-    /**
-     * -1：彻底删除
-     * 0: 已删除
-     * 1：代表已发布
-     * 2：代表保存
-     */
-    private int status;
+    private Integer status;
     private String content;
-    private int commentCnt;
+    private Integer commentCnt;
 
     public Note() {
     }

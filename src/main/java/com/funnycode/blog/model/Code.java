@@ -57,11 +57,22 @@ public class Code {
     public static final int MSG_COMMENT = 4;
 
     /**
+     * 动态类型
      * 1：原创
      * 2：转发
      */
     public static final int FEED_ORIGINAL = 1;
     public static final int FEED_FORWORD = 2;
+
+    /**
+     * 动态内容类型
+     * 1：无
+     * 2：图片
+     * 3：视频
+     */
+    public static final int FEED_CONTENT_NONE = 1;
+    public static final int FEED_CONTENT_IMG = 2;
+    public static final int FEED_CONTENT_VIDEO = 3;
 
     /**
      * 评论

@@ -19,11 +19,11 @@ public class ReasonServiceImpl implements ReasonService {
 
     @Override
     public boolean addReason(Reason reason) {
-        return reasonDAO.addReason(reason) > 0;
+        return reasonDAO.add(reason) > 0;
     }
 
     @Override
     public List<Reason> getAllReasons() {
-        return reasonDAO.getAllReasons();
+        return reasonDAO.findAll();
     }
 }

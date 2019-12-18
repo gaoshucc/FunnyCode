@@ -2,8 +2,8 @@ package com.funnycode.blog.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.funnycode.blog.model.*;
-import com.funnycode.blog.model.VO.AccountUserVO;
-import com.funnycode.blog.model.VO.EditableAccountUserVO;
+import com.funnycode.blog.model.vo.AccountUserVO;
+import com.funnycode.blog.model.vo.EditableAccountUserVO;
 import com.funnycode.blog.service.AccountBindingService;
 import com.funnycode.blog.service.FollowService;
 import com.funnycode.blog.service.NoteService;

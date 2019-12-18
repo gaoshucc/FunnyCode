@@ -17,6 +17,6 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public boolean addReport(Report report) {
-        return reportDAO.addReport(report)>0;
+        return reportDAO.add(report)>0;
     }
 }

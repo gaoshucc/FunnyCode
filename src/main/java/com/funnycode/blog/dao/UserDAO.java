@@ -1,7 +1,7 @@
 package com.funnycode.blog.dao;
 
 import com.funnycode.blog.model.User;
-import com.funnycode.blog.model.VO.UserVO;
+import com.funnycode.blog.model.vo.UserVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -26,94 +26,74 @@ public interface UserDAO {
      * @return int
      */
     @Select({"SELECT COUNT(*) FROM ",TABLE_NAME," WHERE username = #{username}"})
-    int userexists(String username);
+    int existsByUsername(String username);
 
     /**
      * 判断昵称是否已存在
      * @param nickname 昵称
-     * @return int
+     * @return 影响行数
      */
     @Select({"SELECT COUNT(*) FROM ",TABLE_NAME," WHERE nickname = #{username}"})
-    int nicknameexists(String nickname);
+    int existsByNickname(String nickname);
 
     /**
      * 判断昵称是否已存在
      * @param nickname 昵称
-     * @param exceptId 用户ID
-     * @return
+     * @param exceptId 需排除用户ID
+     * @return 影响行数
      */
     @Select({"SELECT COUNT(*) FROM ",TABLE_NAME," WHERE nickname = #{nickname} AND user_id!=#{exceptId}"})
-    int nicknameexistsExcept(String nickname, Long exceptId);
+    int existsByNicknameAndExceptId(String nickname, Long exceptId);
 
     /**
      * 用户注册
      * @param user 用户信息
-     * @return int
+     * @return 影响行数
      */
     @Insert({"INSERT INTO ",TABLE_NAME,"(",INSERT_FIELDS,")",
             "VALUES(#{username}, #{password}, #{nickname}, #{status}, #{lastLogintime}, #{role}, #{profilePath}, #{gender}, #{experience}, #{motto}, #{regtime}, #{salt}, #{email})"})
-    int addUser(User user);
-
-    /**
-     * 用户登录
-     * @param user 用户信息
-     * @return int
-     */
-    @Select({"SELECT ",SELECT_FIELDS," FROM ",TABLE_NAME," WHERE username = #{username} and password = #{password}"})
-    User login(User user);
+    int add(User user);
 
     /**
      * 通过用户名查找用户
      * @param username 用户名
-     * @return User
+     * @return 用户
      */
     @Select({"SELECT ",SELECT_FIELDS," FROM ",TABLE_NAME," WHERE username = #{username}"})
-    User getUserByUsername(String username);
-
-    /**
-     * 通过用户名获得用户密码
-     * @param username 用户名
-     * @return String
-     */
-    @Select({"SELECT password FROM ",TABLE_NAME," WHERE username = #{username}"})
-    String getPasswordByUsername(String username);
+    User getByUsername(String username);
 
     /**
      * 通过用户名更新用户最后登录时间
      * @param userId 用户名
      * @param date 最后登录时间
+     * @return 影响行数
      */
-    void updateLastLogintimeByUserId(long userId, Date date);
+    long updateLastLogintimeByUserId(long userId, Date date);
 
     /**
      * 更新用户信息
-     * @param profilePath 头像
-     * @param nickname 昵称
-     * @param email 邮箱
-     * @param motto 个性签名
-     * @param gender 性别
-     * @param userId 用户ID
-     * @return int
+     * @param user 用户
+     * @return 影响行数
      */
     @Update({"UPDATE ", TABLE_NAME, " SET profile_path=#{profilePath}, nickname=#{nickname}, email=#{email}, motto=#{motto}, gender=#{gender} WHERE user_id=#{userId}"})
-    int updateUserInfo(String profilePath, String nickname, String email, String motto, Integer gender, Long userId);
+    long updateByUser(User user);
 
     /**
      * 更新用户积分
      * @param userId 用户ID
      * @param increment 积分增加值
-     * @return 更新是否成功
+     * @return 影响行数
      */
     @Update({"update ", TABLE_NAME, " set experience=experience+#{increment} where user_id=#{userId}"})
-    int updateUserExperience(long userId, int increment);
+    long updateExperienceByUserId(long userId, int increment);
 
     /**
      * 通过用户id查找用户
      * @param userId 用户id
-     * @return User
+     * @return 用户
      */
     @Select({"SELECT ",SELECT_FIELDS," FROM ",TABLE_NAME," WHERE user_id = #{userId}"})
-    User getUserByUserId(long userId);
+    User getByUserId(long userId);
 
     /**
      * 通过用户id查找用户VO
@@ -124,30 +104,6 @@ public interface UserDAO {
     UserVO getUserVOByUserId(long userId);
 
     /**
-     * 通过用户昵称查找用户
-     * @param nickname 用户昵称
-     * @return List<UserVO>
-     */
-    @Select({"SELECT user_id, nickname, profile_path FROM ",TABLE_NAME," WHERE nickname like concat('%', #{nickname}, '%') AND user_id != #{userId}"})
-    List<UserVO> getUserVOSByNickname(String nickname, Long userId);
-
-    /**
-     * 通过用户id查找用户昵称
-     * @param userId 用户id
-     * @return 用户昵称
-     */
-    @Select({"SELECT nickname FROM ", TABLE_NAME, " WHERE user_id = #{userId}"})
-    String getNicknameById(Long userId);
-
-    /**
-     * 通过用户id查找用户昵称
-     * @param userId 用户id
-     * @return 头像路径
-     */
-    @Select({"SELECT profile_path FROM ", TABLE_NAME, " WHERE user_id = #{userId}"})
-    String getProfilePathById(Long userId);
-
-    /**
      * 通过评论者id查找评论者
      * @param userId 评论者id
      * @return User
@@ -156,11 +112,35 @@ public interface UserDAO {
     User getObserverById(Long userId);
 
     /**
+     * 通过用户昵称查找用户
+     * @param nickname 用户昵称
+     * @return 相关用户列表
+     */
+    @Select({"SELECT user_id, nickname, profile_path FROM ",TABLE_NAME," WHERE nickname like concat('%', #{nickname}, '%') AND user_id != #{userId}"})
+    List<UserVO> findAllUserVOByNickname(String nickname, long userId);
+
+    /**
+     * 通过用户id查找用户昵称
+     * @param userId 用户id
+     * @return 用户昵称
+     */
+    @Select({"SELECT nickname FROM ", TABLE_NAME, " WHERE user_id = #{userId}"})
+    String getNicknameById(long userId);
+
+    /**
+     * 通过用户id查找用户昵称
+     * @param userId 用户id
+     * @return 头像路径
+     */
+    @Select({"SELECT profile_path FROM ", TABLE_NAME, " WHERE user_id = #{userId}"})
+    String getProfilePathById(long userId);
+
+    /**
      * 更新个性签名
      * @param userId 用户ID
      * @param signature 个性签名
      * @return 影响行数
      */
     @Update({"update ", TABLE_NAME, " set motto=#{signature} where user_id=#{userId}"})
-    int updateUserSignature(long userId, String signature);
+    int updateSignatureByUserId(long userId, String signature);
 }

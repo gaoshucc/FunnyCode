@@ -3,7 +3,7 @@
 <mapper namespace="com.funnycode.blog.dao.FeedDAO">
     <sql id="table">feed</sql>
     <sql id="selectFields">id, created_date,user_id, data, type</sql>
-    <select id="getUserFeeds" resultType="com.funnycode.blog.model.Feed">
+    <select id="findAllByIds" resultType="com.funnycode.blog.model.Feed">
         SELECT
         <include refid="selectFields"/>
         FROM

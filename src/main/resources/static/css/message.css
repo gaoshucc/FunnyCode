@@ -5,7 +5,7 @@ body{
     z-index: 1;
     position: relative;
     width: 100%;
-    height: 40px;
+    height: 42px;
 }
 #menu{
     padding: 0 calc((100% - 960px) / 2);
@@ -241,8 +241,8 @@ body{
     width: 100%;
     height: 610px;
     border-radius: 5px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.1);
-    background-color: rgba(255, 255, 255, 1);
+    /*box-shadow: 0 1px 2px rgba(0,0,0,.1);
+    background-color: rgba(255, 255, 255, 1);*/
     overflow: hidden;
 }
 #rightside .show{
@@ -406,6 +406,7 @@ body{
     bottom: 0;
     width: 100%;
     height: 210px;
+    background-color: #fff;
 }
 .send-msg-progress{
     position: absolute;
@@ -444,6 +445,22 @@ body{
     overflow-y: auto;
 }
 /*系统消息项*/
+/*自定义系统消息tab样式*/
+#rightside .layui-tab{
+    margin: 0;
+}
+#rightside .layui-tab-brief>.layui-tab-title{
+    border-bottom: none;
+    border-radius: 4px;
+    background-color: #fff;
+}
+#rightside .layui-tab-content{
+    padding: 0;
+    margin-top: 8px;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
 .msg-item{
     position: relative;
     width: 100%;

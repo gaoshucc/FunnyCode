@@ -1,4 +1,4 @@
-package com.funnycode.blog.model.VO;
+package com.funnycode.blog.model.vo;
 
 import java.util.HashMap;
 import java.util.Map;
