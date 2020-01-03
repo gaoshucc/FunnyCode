@@ -1,7 +1,5 @@
 package com.funnycode.blog.async.handler;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.funnycode.blog.async.EventHandler;
 import com.funnycode.blog.async.EventModel;
 import com.funnycode.blog.async.EventType;
@@ -49,9 +47,8 @@ public class CommentHandler implements EventHandler {
                     + "评论了你的手记<a href='/note/" + model.getEntityId() + "'>" + note.getTitle() + "</a>");
         }else if(model.getEntityType() == EntityType.ENTITY_FEED){
             Feed feed = feedService.getFeedById(model.getEntityId());
-            JSONObject data = JSON.parseObject(feed.getData());
             message.setContent("用户<a href='/user/" + user.getUserId() + "'>" + user.getNickname() + "</a>"
-                    + "评论了你的动态<a href='/feed/" + model.getEntityId() + "'>" + data.getString("content") + "</a>");
+                    + "评论了你的动态<a href='/feed/" + model.getEntityId() + "'>" + feed.getContent() + "</a>");
         }
         message.setHasRead(0);
         message.setType(Code.MSG_COMMENT);

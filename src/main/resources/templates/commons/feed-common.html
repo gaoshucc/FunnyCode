@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/feed-common.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/comment-area.css}">
+    <!--原创模板-->
+    <script id="original-feed-template" type="text/html">
+        <div class="feed-item" id="feed-item-{{ d.feed.id }}" data-type="{{ d.type }}" data-forword="0" data-comment="0" data-id="{{ d.feed.id }}">
+            <!--onclick="deleteFeed(this)"-->
+            <a id="feed-func-{{ d.feed.id }}" class="feed-func" data-owner-id="{{ d.feed.user.userId }}" data-id="{{ d.feed.id }}" href="javascript:void(0);">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-unie6a52"></use>
+                </svg>
+            </a>
+            <div class="feed-item-top">
+                <img data-id="{{ d.feed.user.userId }}" src="{{ d.feed.user.profilePath }}">
+                <a href="/user/{{ d.feed.user.userId }}" data-id="{{ d.feed.user.userId }}">{{ d.feed.user.nickname }}</a>
+                <time>{{ d.createTime }}</time>
+            </div>
+            <div class="feed-item-center">
+                {{# if(d.map.content != null){ }}
+                <a class="feed-item-content" href="/feed/{{ d.feed.id }}">{{ d.map.content }}</a>
+                {{# } }}
+                <!--图片动态-->
+                {{# if(d.attachmentType == 2){ }}
+                <div class="feed-item-attachment">
+                    <span class='feed-item-content-img-box'>
+                        {{# layui.each(d.attachment, function(index, item){ }}
+                        <img src="{{ item }}" class='feed-item-content-img' title='查看图片'>
+                        {{# }); }}
+                    </span>
+                </div>
+                {{# } }}
+                <!--视频动态-->
+                {{# if(d.attachmentType == 3){ }}
+                <div class="feed-item-attachment">
+
+                </div>
+                {{# } }}
+            </div>
+            <div class="feed-item-bottom">
+                <span>
+                    <a data-id="{{ d.feed.id }}" data-forword-state="{{ d.forwordState }}" class="{{ d.forwordStateCla }}" onclick="showForwordEditor(this)">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-fenxiang"></use>
+                        </svg>
+                        <span class="forword-cnt" id="forword-cnt-{{ d.feed.id }}">{{ d.feed.forwordCnt }}</span>
+                    </a>
+                </span>
+                <span>
+                    <a data-id="{{ d.feed.id }}" onclick="showForwordComment(this)">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-pinglun4"></use>' +
+                        </svg>
+                        <span class="comment-cnt" id="comment-cnt-{{ d.feed.id }}">{{ d.feed.commentCnt }}</span>
+                    </a>
+                </span>
+                <span>
+                    <a data-id="{{ d.feed.id }}" data-like-state="{{ d.likeState }}" class="{{ d.likeStateCla }}" onclick="likeFeed(this)">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-dianzan"></use>
+                        </svg>
+                        <span class="like-cnt" id="like-cnt-{{ d.feed.id }}">{{ d.feed.likeCnt }}</span>
+                    </a>
+                </span>
+            </div>
+        </div>
+    </script>
+    <!--转发模板-->
+    <script id="forword-feed-template" type="text/html">
+        <div class="feed-item" data-type="{{ d.type }}" data-forword="0" data-comment="0" data-id="{{ d.feed.id }}">
+            <a id="feed-func-{{ d.feed.id }}" data-owner-id="{{ d.feed.user.userId }}" class="feed-func" data-id="{{ d.feed.id }}" href="javascript:void(0);">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-unie6a52"></use>
+                </svg>
+            </a>
+            <div class="feed-item-top">
+                <img data-id="{{ d.feed.user.userId }}" src="{{ d.feed.user.profilePath }}">
+                <a href="/user/{{ d.feed.user.userId }}" data-id="{{ d.feed.user.userId }}">{{ d.feed.user.nickname }}</a>
+                <time>{{ d.createTime }}</time>
+            </div>
+            <div class="feed-item-center">
+                {{# if(d.content != null){ }}
+                <a class="feed-item-content" href="/feed/{{ d.feed.id }}">{{ d.content }}</a>
+                {{# } }}
+                <div class="forword-item-block">
+                    {{# if(d.flag){ }}
+                    <div class="forword-item-top">
+                        <img data-id="{{ d.forword.user.userId }}" src="{{ d.forword.user.profilePath }}">
+                        <a href="/user/{{ d.forword.user.userId }}" data-id="{{ d.forword.user.userId }}">{{ d.forword.user.nickname }}</a>
+                        <time>{{ d.forwordCreateTime }}</time>
+                    </div>
+                    <div class="forword-item-center">
+                        {{# if(d.forwordContent.content != null){ }}
+                        <a class="feed-item-content" href="/feed/{{ d.forword.id }}">{{ d.forwordContent.content }}</a>
+                        {{# } }}
+                        <!--图片动态-->
+                        {{# if(d.forword.attachmentType == 2){ }}
+                        <div class="feed-item-attachment">
+                            <span class='feed-item-content-img-box'>
+                                {{# layui.each(d.forwordAttachment, function(index, item){ }}
+                                <img src="{{ item }}" class='feed-item-content-img' title='查看图片'>
+                                {{# }); }}
+                            </span>
+                        </div>
+                        {{# } }}
+                        <!--视频动态-->
+                        {{# if(d.forword.attachmentType == 3){ }}
+                        <div class="feed-item-attachment">{{  }}</div>
+                        {{# } }}
+                    </div>
+                    {{# }else{ }}
+                    <div class="forword-item-inexistence">
+                        {{ d.forwordContent }}
+                    </div>
+                    {{# } }}
+                </div>
+            </div>
+            <div class="feed-item-bottom">
+                <span>
+                    <a data-id="{{ d.feed.id }}" onclick="showForwordComment(this)">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-pinglun4"></use>' +
+                        </svg>
+                        <span class="comment-cnt" id="comment-cnt-{{ d.feed.id }}">{{ d.feed.commentCnt }}</span>
+                    </a>
+                </span>
+                <span>
+                    <a data-id="{{ d.feed.id }}" data-like-state="{{ d.likeState }}" class="{{ d.likeStateCla }}" onclick="likeFeed(this)">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-dianzan"></use>
+                        </svg>
+                        <span class="like-cnt" id="like-cnt-{{ d.feed.id }}">{{ d.feed.likeCnt }}</span>
+                    </a>
+                </span>
+            </div>
+        </div>
+    </script>
+</head>
+<body th:fragment="body">
+<script>
+    let forword;
+    function showForwordEditor(ele){
+        layui.use('layedit', function () {
+            let layedit = layui.layedit,
+                feedId = ele.getAttribute("data-id"),  //利用feedId为每个编辑框设置唯一id
+                feedblock = ele.parentElement.parentElement.parentElement;
+            if(feedblock.getAttribute("data-comment") === "1"){
+                feedblock.removeChild(document.getElementById("comment-editor-"+feedId));
+                feedblock.removeChild(document.getElementById("comment-area-"+feedId));
+                feedblock.setAttribute("data-comment", "0");
+                ele.parentElement.nextElementSibling.children[0].style.color = "#333333";
+            }
+            if(feedblock.getAttribute("data-forword") === "1"){  //为容器添加是否存在转发编辑框的标志属性data-forword，0不存在，1存在
+                feedblock.removeChild(document.getElementById("forword-editor-"+feedId));
+                feedblock.setAttribute("data-forword", "0");
+                if(ele.getAttribute("data-forword-state") === "-1"){
+                    ele.style.color = "#333333";
+                }
+                return;
+            }
+            let forwordEditor = document.createElement("div");
+            forwordEditor.id = "forword-editor-" + feedId;
+            forwordEditor.classList.add("forword-editor-cla");
+            forwordEditor.innerHTML = "<textarea id='forword-editor-input-"+ feedId +"' style='display: none;'></textarea>";
+            feedblock.appendChild(forwordEditor);
+            if(ele.getAttribute("data-forword-state") === "-1"){
+                ele.style.color = "#ff9813"; //点亮转发按钮
+            }
+            feedblock.setAttribute("data-forword", "1");  //设置存在转发编辑框标志
+            forword = layedit.build('forword-editor-input-'+feedId, {
+                height: 100,
+                tool: [
+                    'face' //表情
+                ],
+                btn: "<span data-id='"+ feedId +"' onclick='forwordFeed(this)' class='layui-layedit-submit-btn'>转发</span>"
+            });
+        });
+    }
+
+    function forwordFeed(ele){
+        layui.use(['layedit', 'layer'], function () {
+            let layedit = layui.layedit,
+                layer = layui.layer;
+            let isClickForwordBtn = true;
+            if(isClickForwordBtn){
+                let index = layer.load(1, {
+                    shade: [0.4,'#000'] //0.1透明度的白色背景
+                });
+                isClickForwordBtn = false;
+                setTimeout(function () {
+                    isClickForwordBtn = true;
+                }, 1500);
+                let feedId = ele.getAttribute("data-id");
+                layedit.sync(forword);
+                let content = document.querySelector("#forword-editor-input-"+ele.getAttribute("data-id")).value;
+                content = content + "<em style='margin: 0 2px;color: rgba(0, 161, 214, 1);font-style: normal;'>//转发动态</em>";
+                $.ajax({
+                    type: "POST",
+                    url: '/user/feed/forword',
+                    data: {
+                        "content": content,
+                        "feedId": feedId
+                    },
+                    dataType: "json",
+                    success:function(data){
+                        layer.close(index);
+                        if(data.code === REQ_SUCC){
+                            layer.msg("转发成功", {
+                                time: 2500
+                            });
+                            console.log(document.getElementById("forword-cnt-"+feedId).innerHTML);
+                            window.location.reload();
+                        }else{
+                            layer.msg(data.code + ":" + data.msg, {
+                                time: 2500
+                            });
+                        }
+                    },
+                    async: true
+                });
+            }
+        });
+    }
+
+    /*点赞*/
+    function likeFeed(ele){
+        let feedId = ele.getAttribute("data-id"),
+            like = ele.getAttribute("data-like-state") === "1";
+        let reqUrl = like ? "/user/dislike/feed" : "/user/like/feed";
+        $.ajax({
+            type: "POST",
+            url: PRO_NAME + reqUrl,
+            data: {"feedId": feedId},
+            dataType: "json",
+            success: function (data) {
+                if(data.code === REQ_SUCC && data.data !== undefined){
+                    if(like){
+                        ele.classList.remove("has-like");
+                        ele.classList.add("no-like");
+                        ele.setAttribute("data-like-state", -1);
+                    }else{
+                        layer.msg("点赞成功", {
+                            time: 2500
+                        });
+                        ele.classList.remove("no-like");
+                        ele.classList.add("has-like");
+                        ele.setAttribute("data-like-state", 1);
+                    }
+                    let likeCntBox = document.getElementById("like-cnt-" + feedId);
+                    if(null != likeCntBox){
+                        likeCntBox.innerHTML = data.data.likeCnt;
+                    }
+                }
+            },
+            async: true
+        });
+    }
+
+    let comment;
+    function showForwordComment(ele) {
+        layui.use(['laytpl', 'layedit'], function () {
+            let layedit = layui.layedit;
+
+            let feedId = ele.getAttribute("data-id"),  //利用feedId为每个编辑框设置唯一id
+                feedblock = ele.parentElement.parentElement.parentElement;
+            if(feedblock.getAttribute("data-forword") === "1"){
+                feedblock.removeChild(document.getElementById("forword-editor-"+feedId));
+                feedblock.setAttribute("data-forword", "0");
+                if(ele.parentElement.previousElementSibling.children[0].getAttribute("data-forword-state") === "-1"){
+                    ele.parentElement.previousElementSibling.children[0].style.color = "#333333";
+                }
+            }
+            if(feedblock.getAttribute("data-comment") === "1"){  //为容器添加是否存在转发编辑框的标志属性data-comment，0不存在，1存在
+                feedblock.removeChild(document.getElementById("comment-editor-"+feedId));
+                feedblock.removeChild(document.getElementById("comment-area-"+feedId));
+                feedblock.setAttribute("data-comment", "0");
+                ele.style.color = "#333333";
+                return;
+            }
+            //根据动态类型设置箭头::before位置(通过设置不同类)
+            let cla;
+            if(feedblock.getAttribute("data-type") === "1"){
+                cla = "comment-editor-cla1";
+            }else{
+                cla = "comment-editor-cla2";
+            }
+            let commentEditor = document.createElement("div");
+            commentEditor.id = "comment-editor-" + feedId;
+            commentEditor.classList.add(cla);
+            commentEditor.innerHTML = "<textarea id='comment-editor-input-"+ feedId +"' style='display: none;'></textarea>";
+            //加载评论区
+            let commentBlock = document.createElement("div");
+            commentBlock.id = "comment-area-" + feedId;
+            commentBlock.classList.add("comment-area");
+            feedblock.appendChild(commentEditor);
+            feedblock.appendChild(commentBlock);
+            ele.style.color = "#ff9813"; //点亮评论按钮
+            feedblock.setAttribute("data-comment", "1");  //设置存在评论编辑框标志
+            comment = layedit.build('comment-editor-input-'+feedId, {
+                height: 100,
+                tool: [
+                    'face' //表情
+                ],
+                btn: "<span data-id='"+ feedId +"' onclick='commentFeed(this)' class='layui-layedit-submit-btn'>评论</span>"
+            });
+            loadComment(feedId, document.getElementById("comment-area-" + feedId));
+        });
+    }
+
+    function commentFeed(ele) {
+        layui.use(['layedit', 'layer'], function () {
+            let layedit = layui.layedit,
+                layer = layui.layer;
+            let isClickCommentBtn = true;
+            if(isClickCommentBtn){
+                isClickCommentBtn = false;
+                setTimeout(function () {
+                    isClickCommentBtn = true;
+                }, 1500);
+                let feedId = ele.getAttribute("data-id");
+                layedit.sync(comment);
+                let content = document.querySelector("#comment-editor-input-"+ele.getAttribute("data-id")).value;
+                if(content == null || content.length <= 0){
+                    layer.msg("评论不能为空", {
+                        time: 2500
+                    });
+                    return;
+                }
+                let index = layer.load(1, {
+                    shade: [0.4,'#000'] //0.1透明度的白色背景
+                });
+                $.ajax({
+                    type: "POST",
+                    url: '/user/feed/comment',
+                    data: {
+                        "content": content,
+                        "feedId": feedId,
+                        "parentId": 0
+                    },
+                    dataType: "json",
+                    success:function(data){
+                        layer.close(index);
+                        if(data.code === REQ_SUCC){
+                            layer.msg("评论成功", {
+                                time: 2500
+                            });
+                            layedit.setContent(comment, "", false);
+                            loadComment(feedId, document.getElementById("comment-area-" + feedId));
+                        }else{
+                            layer.msg(data.code + ":" + data.msg, {
+                                time: 2500
+                            });
+                        }
+                    },
+                    async: true
+                });
+            }
+        });
+    }
+
+    function loadComment(feedId, commentBox){
+        $.ajax({
+            type: "GET",
+            url: PRO_NAME + "/user/feed/comments",
+            data: {
+                "feedId": feedId
+            },
+            dataType: "json",
+            success: function (data) {
+                if(data.code === REQ_SUCC){
+                    if(data.data != null && data.data.comments.length > 0){
+                        showComments(feedId, data.data.comments, commentBox);
+                        showCommentFunc(feedId);
+                    }else{
+                        commentBox.innerHTML = "<div id='no-comments'>" +
+                            "<span id='no-comments-icon'>" +
+                            "<svg class='icon' aria-hidden='true'>" +
+                            "<use xlink:href='#icon-shafa1'></use>" +
+                            "</svg>" +
+                            "</span>"+
+                            "<span id='no-comments-text'>第一个赶到的你，赶紧来<a href='#write-comment-box'>抢沙发</a>吧</span>" +
+                            "</div>";
+                    }
+                }
+            },
+            async: true
+        });
+    }
+
+    /**
+     * 展示评论区
+     */
+    function showComments(feedId, comments, commentBox) {
+        layui.use(['util'], function () {
+            let util = layui.util;
+
+            commentBox.innerHTML = "";
+            for (let i = 0; i < comments.length; i++) {
+                if (comments[i] != null) {
+                    let createTime = util.timeAgo(comments[i].createTime, false);
+                    //创建一条评论
+                    let comment = document.createElement("div");
+                    addClass("comment", comment);
+                    //创建评论者头像
+                    let observerImg = document.createElement("img");
+                    addClass("comment-profile", observerImg);
+                    observerImg.src = comments[i].user.profilePath;
+                    //创建父评论
+                    let observer = document.createElement("div");
+                    addClass("comment-rightpart", observer);
+                    observer.innerHTML = "<time class='comment-time'>" + createTime + "</time>" +
+                        "<a href='/user/"+ comments[i].user.userId +"' class='comment-nickname'>" + comments[i].user.nickname + "</a>" +
+                        "<span class='comment-content'>" + comments[i].content +
+                        "<a id='comment-func-"+ comments[i].id +"' class='comment-func' data-owner-id='"+ comments[i].user.userId +"' data-id='"+ comments[i].id +"' data-nickname='"+ comments[i].user.nickname +"' data-comment-content='"+ comments[i].content +"'>" +
+                        "<svg class='icon' aria-hidden='true'>" +
+                        "<use xlink:href='#icon-unie6a52'></use>" +
+                        "</svg>" +
+                        "</a>" +
+                        "</span>";
+                    //将主评论插入到评论
+                    comment.appendChild(observerImg);
+                    comment.appendChild(observer);
+
+                    if (comments[i].childComments != null) {
+                        showReplies(comment, comments[i], comments[i].childComments);
+                    }
+                    //将评论插入评论区
+                    commentBox.appendChild(comment);
+                }
+            }
+        });
+    }
+
+    //创建子评论（即回复）
+    function showReplies(comment, parentComment, childComment) {
+        layui.use(['util'], function () {
+            let util = layui.util;
+
+            for (let j = 0; j < childComment.length; j++) {
+                let createTime = util.timeAgo(childComment[j].createTime, false);
+                //创建回复
+                let replyBox = document.createElement("div");
+                addClass("replies", replyBox);
+                replyBox.innerHTML = "<img src='" + childComment[j].user.profilePath + "' class='comment-profile'>" +
+                    "<time class='reply-time'>" + createTime + "</time>" +
+                    "<a href='/user/"+ childComment[j].user.userId +"' class='comment-nickname'>" + childComment[j].user.nickname + "</a><span class='reply-text'>回复</span><a href='/user/"+ parentComment.user.userId +"' class='comment-nickname'>" + parentComment.user.nickname + "</a>" +
+                    "<span class='comment-content'>" + childComment[j].content +
+                    "<a id='comment-func-"+ childComment[j].id +"' class='comment-func' data-owner-id='"+ childComment[j].user.userId +"' data-id='"+ childComment[j].id +"' data-nickname='"+ childComment[j].user.nickname +"' data-comment-content='"+ childComment[j].content +"'>" +
+                    "<svg class='icon' aria-hidden='true'>" +
+                    "<use xlink:href='#icon-unie6a52'></use>" +
+                    "</svg>" +
+                    "</a>" +
+                    "</span>";
+                comment.appendChild(replyBox);
+                //如果该评论还有子评论，就继续递归创建子评论
+                if (childComment[j].childComments != null) {
+                    //传递父评论跟子评论过去，进行递归调用
+                    showReplies(comment, childComment[j], childComment[j].childComments);
+                }
+            }
+        });
+    }
+
+    /**
+     * 渲染评论可用自定义功能
+     */
+    function showCommentFunc(feedId) {
+        let currentUserId = document.querySelector("#current-user").value, content;
+        $('#feeds-block').on("click", ".comment-func", function () {
+            let ownerId = $(this).attr("data-owner-id"),
+                bereplyId = $(this).attr("data-id"),
+                bereplyNickname = $(this).attr("data-nickname"),
+                commentContent = $(this).attr("data-comment-content");
+            //判断当前评论是否属于本用户
+            content = "<a class='comment-func-point reply' data-feed-id='"+ feedId +"' data-id='"+ bereplyId +"' data-nickname='"+ bereplyNickname +"' data-comment-content='"+ commentContent +"'>回复</a>";
+            if(ownerId === currentUserId){
+                content = content + "<a class='comment-func-point delete-comment' data-feed-id='"+ feedId +"' data-id='"+ bereplyId +"'>删除</a>";
+            }else{
+                content = content + "<a class='comment-func-point report-comment' data-id='"+ bereplyId +"' data-nickname='"+ bereplyNickname +"' data-comment-content='"+ commentContent +"'>举报</a>";
+            }
+            layer.tips(content, this, {
+                id: 'comment-func-point-'+bereplyId,
+                tipsMore: true,
+                tips: 2,
+                time: 0,
+                skin: 'layui-box layui-util-comment-func',
+                shade: false, //[0.01, '#fff']
+                success: function (layero, index) {
+                    $('body').click(function(e) {
+                        /**
+                         * #comment-func-point-{bereplyId} : 评论功能tips的id，避免重复弹出相同tips
+                         * #comment-func-{bereplyId} : 评论功能按钮的id，在点击另一评论功能按钮时，可及时关闭其它弹窗
+                         * !$(e.target).isChildAndSelfOf('#comment-func-point-'+bereplyId) &&
+                         */
+                        if(!$(e.target).isChildAndSelfOf('#comment-func-'+bereplyId)){
+                            layer.close(index);
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    $(document).on("click", ".reply", function () {
+        let feedId = $(this).attr("data-feed-id"),
+            bereplyId = $(this).attr("data-id"),
+            bereplyNickname = $(this).attr("data-nickname"),
+            commentContent = $(this).attr("data-comment-content");
+        layer.open({
+            type: 2,
+            title: '回复【'+bereplyNickname+'】的评论【'+ commentContent +'】',
+            shadeClose: true,
+            shade: 0.3,
+            area: ['420px', '260px'],
+            content: '/user/feed/reply/'+ feedId +"/"+ bereplyId,
+            end: function () {
+                loadComment(feedId, document.getElementById("comment-area-" + feedId));
+
+            }
+        });
+    });
+
+    $(document).on("click", ".report-comment", function () {
+        let bereplyId = $(this).attr("data-id"),
+            bereplyNickname = $(this).attr("data-nickname"),
+            commentContent = $(this).attr("data-comment-content");
+        layer.open({
+            type: 2,
+            title: '举报【'+bereplyNickname+'】的评论【'+commentContent+'】',
+            shadeClose: true,
+            shade: 0.4,
+            area: ['420px', '300px'],
+            content: '/user/report/'+ ENTITY_COMMENT + "/" + bereplyId,
+            end: function () {
+
+            }
+        });
+    });
+
+    $(document).on("click", ".delete-comment", function () {
+        let feedId = $(this).attr("data-feed-id"),
+            commentId = $(this).attr("data-id");
+        $.ajax({
+            type: "POST",
+            url: PRO_NAME + "/user/comment/delete",
+            data: {"commentId": commentId},
+            dataType: "json",
+            success: function (data) {
+                if(data.code === REQ_SUCC){
+                    loadComment(feedId, document.getElementById("comment-area-" + feedId));
+                    layer.msg("评论已删除", {
+                        time: 2500
+                    });
+                }else{
+                    layer.msg("删除评论失败", {
+                        time: 2500
+                    });
+                }
+            },
+            async: true
+        });
+    });
+</script>
+</body>
+</html>

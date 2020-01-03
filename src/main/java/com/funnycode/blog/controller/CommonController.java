@@ -6,7 +6,6 @@ import com.funnycode.blog.service.ReasonService;
 import com.funnycode.blog.service.ReportService;
 import com.funnycode.blog.service.SensitiveService;
 import com.funnycode.blog.util.ResultUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,20 +24,19 @@ import java.util.Map;
 @Valid
 @Controller
 public class CommonController {
-    @Autowired
-    private HostHolder hostHolder;
+    private final HostHolder hostHolder;
+    private final ReasonService reasonService;
+    private final ReportService reportService;
+    private final FeedbackService feedbackService;
+    private final SensitiveService sensitiveService;
 
-    @Autowired
-    private ReasonService reasonService;
-
-    @Autowired
-    private ReportService reportService;
-
-    @Autowired
-    private FeedbackService feedbackService;
-
-    @Autowired
-    private SensitiveService sensitiveService;
+    public CommonController(HostHolder hostHolder, ReasonService reasonService, ReportService reportService, FeedbackService feedbackService, SensitiveService sensitiveService) {
+        this.hostHolder = hostHolder;
+        this.reasonService = reasonService;
+        this.reportService = reportService;
+        this.feedbackService = feedbackService;
+        this.sensitiveService = sensitiveService;
+    }
 
     @GetMapping("/report/reasons")
     @ResponseBody

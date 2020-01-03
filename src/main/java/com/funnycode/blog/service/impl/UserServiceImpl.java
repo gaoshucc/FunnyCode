@@ -1,17 +1,15 @@
 package com.funnycode.blog.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.funnycode.blog.configration.Constants;
 import com.funnycode.blog.dao.UserDAO;
-import com.funnycode.blog.model.*;
+import com.funnycode.blog.model.Code;
+import com.funnycode.blog.model.Ticket;
+import com.funnycode.blog.model.User;
 import com.funnycode.blog.model.vo.UserVO;
-import com.funnycode.blog.service.NoteService;
 import com.funnycode.blog.service.SensitiveService;
 import com.funnycode.blog.service.TicketService;
 import com.funnycode.blog.service.UserService;
 import com.funnycode.blog.util.BlogUtil;
-import com.funnycode.blog.util.ResultUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,20 +20,17 @@ import java.util.*;
  */
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private Constants constants;
+    private final Constants constants;
+    private final UserDAO userDAO;
+    private final TicketService ticketService;
+    private final SensitiveService sensitiveService;
 
-    @Autowired
-    private UserDAO userDAO;
-
-    @Autowired
-    private TicketService ticketService;
-
-    @Autowired
-    private NoteService noteService;
-
-    @Autowired
-    private SensitiveService sensitiveService;
+    public UserServiceImpl(Constants constants, UserDAO userDAO, TicketService ticketService, SensitiveService sensitiveService) {
+        this.constants = constants;
+        this.userDAO = userDAO;
+        this.ticketService = ticketService;
+        this.sensitiveService = sensitiveService;
+    }
 
     @Override
     public boolean userexists(String username) {
@@ -169,22 +164,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUserSignature(long userId, String signature) {
         return userDAO.updateSignatureByUserId(userId, sensitiveService.filter(signature)) > 0;
-    }
-
-    @Override
-    public Result getNoteType() {
-        List<NoteType> types = noteService.getNoteType();
-        if(types == null || types.size() == 0){
-            return ResultUtil.error(ExceptionEnum.UNKNOWN_EOR);
-        }else{
-            Map<String, Object> map = new HashMap<>();
-            map.put("types", JSON.toJSONString(types));
-            return ResultUtil.success(map);
-        }
-    }
-
-    @Override
-    public Note getNote(long noteId) {
-        return noteService.getNote(noteId);
     }
 }

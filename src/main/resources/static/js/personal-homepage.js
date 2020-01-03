@@ -230,7 +230,7 @@ layui.use(['element', 'util', 'flow', 'laytpl', 'carousel'], function () {
     function showFeed() {
         let userId = document.querySelector("#user-id").value;
         flow.load({
-            elem: '#publish-infomation-feed',
+            elem: '#feeds-block',
             scrollElem: document,
             isAuto: true,
             mb: 150,
@@ -245,23 +245,23 @@ layui.use(['element', 'util', 'flow', 'laytpl', 'carousel'], function () {
                     },
                     dataType: "json",
                     success: function (data) {
-                        if(data.code === REQ_SUCC && data.data != null && data.data.feeds != null && data.data.feeds.length > 0){
-                            let lis = [], flag; //flag判断被转发动态是否为空（已被删除）
-                            let forwordFeed, forwordFeedCreateDate, forwordFeedContent; //被转发动态信息
+                        let lis = [];
+                        if(data.code === REQ_SUCC && data.data != null && data.data.feeds != null){
+                            let flag, attachment, //flag判断被转发动态是否为空（已被删除），attachment为附带内容
+                                forwordFeed, forwordFeedCreateDate, forwordFeedContent; //被转发动态信息
                             layui.each(data.data.feeds, function(index, item){
-                                let createTime = util.timeAgo(item.createdDate, false);
-                                let map = JSON.parse(item.data);
-                                let renderData,
-                                    template;
+                                let createTime = util.timeAgo(item.createdDate, false),
+                                    map = JSON.parse(item.data),
+                                    renderData, template;  //渲染数据，渲染模板
                                 if(item.type === 1){
+                                    attachment = (map.attachment && map.attachment.length>0) ? JSON.parse(map.attachment) : null;
                                     renderData = { //数据
-                                        type: item.type,
                                         feed: item,
+                                        type: item.type,
                                         createTime: createTime,
+                                        attachment: attachment,
+                                        attachmentType: item.attachmentType,
                                         map: map,
-                                        forwordCntId: "forword-cnt-"+item.id,
-                                        commentCntId: "comment-cnt-"+item.id,
-                                        likeCntId: "like-cnt-"+item.id,
                                         forwordStateCla: item.forwordState === true ? "has-forword" : "no-forword",
                                         forwordState: item.forwordState === true ? 1 : -1,
                                         likeStateCla: item.likeState === true ? "has-like" : "no-like",
@@ -273,27 +273,28 @@ layui.use(['element', 'util', 'flow', 'laytpl', 'carousel'], function () {
                                         flag = true;
                                         forwordFeed = map.feed;
                                         forwordFeedCreateDate = util.timeAgo(map.feed.createdDate, false);
-                                        forwordFeedContent = JSON.parse(map.feed.data).content;
+                                        forwordFeedContent = JSON.parse(map.feed.data);
+                                        attachment = (forwordFeedContent.attachment && forwordFeedContent.attachment.length>0) ? JSON.parse(forwordFeedContent.attachment) : null;
                                     }else{
                                         flag = false;
-                                        forwordFeed = "";
-                                        forwordFeedCreateDate = "";
+                                        forwordFeed = null;
+                                        forwordFeedCreateDate = null;
                                         forwordFeedContent = "该条动态已被删除 (ﾒﾟДﾟ)ﾒ";
+                                        attachment = null;
                                     }
                                     renderData = { //数据
-                                        type: item.type,
                                         feed: item,
+                                        type: item.type,
                                         createTime: createTime,
                                         content: map.content,
+                                        attachmentType: item.attachmentType,
 
                                         flag: flag,
                                         forword: forwordFeed,
                                         forwordCreateTime: forwordFeedCreateDate,
                                         forwordContent: forwordFeedContent,
-
+                                        forwordAttachment: attachment,
                                         forwordCntId: "forword-cnt-"+item.id,
-                                        commentCntId: "comment-cnt-"+item.id,
-                                        likeCntId: "like-cnt-"+item.id,
                                         likeStateCla: item.likeState === true ? "has-like" : "no-like",
                                         likeState: item.likeState === true ? 1 : -1
                                     };
@@ -309,14 +310,70 @@ layui.use(['element', 'util', 'flow', 'laytpl', 'carousel'], function () {
                                 photos: '.feed-item-content-img-box',
                                 anim: 5
                             });
-                        }else{
-                            let notesBox = document.querySelector("#publish-infomation-feed");
-                            notesBox.innerHTML = "<div id='no-content-box'><span id='no-content-icon'><svg class='icon' aria-hidden='true'><use xlink:href='#icon-kong'></use></svg></span><span id='no-content'>空空如也，用户暂无动态</span></div>";
                         }
+                        //let noContent = "<div><div id='no-content-box'><span id='no-content-icon'><svg class='icon' aria-hidden='true'><use xlink:href='#icon-kong'></use></svg></span><span id='no-content'>空空如也，用户暂无动态</span></div></div>";
                     },
                     async: true
                 });
             }
         });
     }
+
+    let currentUserId = document.querySelector("#current-user").value, content;
+    $("#feeds-block").on("click", ".feed-func", function () {
+        let ownerId = $(this).attr("data-owner-id"),
+            feedId = $(this).attr("data-id");
+        if(ownerId === currentUserId){
+            content = "<a class='feed-func-point delete-feed' data-id='"+ feedId +"'>删除</a>";
+        }else{
+            content = "<a class='feed-func-point report-feed' data-id='"+ feedId +"'>举报</a>";
+        }
+        layer.tips(content, this, {
+            id: 'feed-func-point-'+feedId,
+            tipsMore: true,
+            tips: 2,
+            time: 0,
+            skin: 'layui-box layui-util-comment-func',
+            shade: false,
+            success: function (layero, index) {
+                $('body').click(function(e) {
+                    /**
+                     * #feed-func-point-{feedId} : 动态功能tips的id，避免重复弹出相同tips
+                     * #feed-func-{feedId} : 动态功能按钮的id，在点击另一评论功能按钮时，可及时关闭其它弹窗
+                     */
+                    /*!$(e.target).isChildAndSelfOf('#feed-func-point-'+feedId) && */
+                    if(!$(e.target).isChildAndSelfOf('#feed-func-'+feedId)){
+                        layer.close(index);
+                    }
+                });
+            }
+        });
+    });
+
+    /**
+     * 删除动态
+     */
+    $(document).on("click", ".delete-feed", function () {
+        let feedId = $(this).attr("data-id");
+        $.ajax({
+            type: "POST",
+            url: PRO_NAME + "/user/feed/delete",
+            data: {"feedId": feedId},
+            dataType: "json",
+            success: function (data) {
+                if(data.code === REQ_SUCC){
+                    $("#feed-item-"+feedId).remove();
+                    layer.msg("删除动态成功", {
+                        time: 2500
+                    });
+                }else{
+                    layer.msg("删除评论失败，请刷新重试", {
+                        time: 2500
+                    });
+                }
+            },
+            async: true
+        });
+
+    });
 });

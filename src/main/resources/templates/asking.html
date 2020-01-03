@@ -17,12 +17,13 @@
             </select>
             <span id="warm-tips">标题、内容都不能为空哦 ( • ̀ω•́ )</span>
             <a class="func" id="publish" title="提问题">提问题</a>
+            <a class="func" id="save" title="保存问题，下次继续编写">保存草稿</a>
             <a class="func" id='delete' href="/user/questions" title="取消本次编辑，且所有修改不保存，该操作不可恢复">取消</a>
         </div>
-        <div class="editormd" id="note-editormd">
+        <div class="editormd" id="quest-editormd">
             <textarea class="editormd-markdown-textarea" name="markdownDoc"></textarea>
             <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
-            <textarea class="editormd-html-textarea" name="noteContent" id="note-editormd-html-doc"></textarea>
+            <textarea class="editormd-html-textarea" name="noteContent" id="quest-editormd-html-doc"></textarea>
         </div>
     </form>
 </div>
@@ -30,7 +31,7 @@
 <script type="text/javascript" th:src="@{/js/asking.js}"></script>
 <script type="text/javascript">
     $(function () {
-        editormd("note-editormd", {
+        editormd("quest-editormd", {
             width: "100%",
             height: 640,
             syncScrolling: "single",

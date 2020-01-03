@@ -2,15 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.funnycode.blog.dao.FeedDAO">
     <sql id="table">feed</sql>
-    <sql id="selectFields">id, created_date,user_id, data, type</sql>
+    <sql id="selectFields">id, user_id, created_date, content, attachment, type, attachment_type, bind_id, comment_cnt, forword_cnt</sql>
     <select id="findAllByIds" resultType="com.funnycode.blog.model.Feed">
         SELECT
         <include refid="selectFields"/>
         FROM
         <include refid="table"/>
-
         WHERE id &lt; #{maxId}
-
         <if test="userIds.size() != 0">
             AND user_id in
             <foreach item="item" index="index" collection="userIds"

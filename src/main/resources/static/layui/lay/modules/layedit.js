@@ -360,6 +360,7 @@ layui.define(
               });
           b.index = n
          },
+         faceTag = false, //是否已弹出表情tips
          x = function(t) {
           var a = function() {
            var t = ["[微笑]", "[嘻嘻]", "[哈哈]", "[可爱]", "[可怜]", "[挖鼻]", "[吃惊]", "[害羞]", "[挤眼]", "[闭嘴]", "[鄙视]", "[爱你]", "[泪]", "[偷笑]", "[亲亲]", "[生病]", "[太开心]", "[白眼]", "[右哼哼]", "[左哼哼]", "[嘘]", "[衰]", "[委屈]", "[吐]", "[哈欠]", "[抱抱]", "[怒]", "[疑问]", "[馋嘴]", "[拜拜]", "[思考]", "[汗]", "[困]", "[睡]", "[钱]", "[失望]", "[酷]", "[色]", "[哼]", "[鼓掌]", "[晕]", "[悲伤]", "[抓狂]", "[黑线]", "[阴险]", "[怒骂]", "[互粉]", "[心]", "[伤心]", "[猪头]", "[熊猫]", "[兔子]", "[ok]", "[耶]", "[good]", "[NO]", "[赞]", "[来]", "[弱]", "[草泥马]", "[神马]", "[囧]", "[浮云]", "[给力]", "[围观]", "[威武]", "[奥特曼]", "[礼物]", "[钟]", "[话筒]", "[蜡烛]", "[蛋糕]"],
@@ -374,7 +375,7 @@ layui.define(
               function(t) {
                "face" !== e(t.target).attr("layedit-event") && i.close(x.index)
               },
-              x.index = i.tips(function() {
+              faceTag ? i.close(x.index) : (x.index = i.tips(function() {
                var t = [];
                return layui.each(a,
                    function(e, i) {
@@ -388,6 +389,7 @@ layui.define(
                skin: "layui-box layui-util-face",
                maxWidth: 500,
                success: function(l, n) {
+                   faceTag = true;
                 l.css({
                  marginTop: -4,
                  marginLeft: -10
@@ -400,13 +402,16 @@ layui.define(
                          i.close(n)
                     }),
                     e(document).off("click", x.hide).on("click", x.hide)
+               },
+               end: function () {
+                   faceTag = false
                }
-              })
+              }))
          },
          //自定义动态图片上传
          feedImgTag = false,//是否已弹出动态图片tips
          myImg = function(t) {
-           feedImgTag ? (i.close(myImg.index), feedImgTag=false) : (myImg.index = i.tips(function() {
+           feedImgTag ? i.close(myImg.index) : (myImg.index = i.tips(function() {
                return ["<div class='image-popup'>",
                    "<div title='放弃图片上传' class='image-close-btn'><i class='iconfont'>&#xe623;</i></div>",
                    "<div class='tool-tips-title'><span>图片上传<span class='pic-cnt-hint'>0 / 9</span></span></div>",
@@ -418,6 +423,7 @@ layui.define(
               } (), this, {
                tips: 1,
                time: 0,
+               closeBtn:1,
                move: '.tool-tips-title',
                skin: "layui-box layui-util-image",
                success: function(l, n) {
@@ -461,7 +467,7 @@ layui.define(
                                                newImg.remove();
                                                imgNum--;
                                                l.find('.pic-cnt-hint').html(imgNum + " / 9");
-                                               l.find(".upload-file-array").val(curFiles.join(","));
+                                               l.find(".upload-file-array").val(JSON.stringify(curFiles));
                                                if(imgNum === 8){
                                                    uploadBtn.css({
                                                        display: 'block'
@@ -472,7 +478,7 @@ layui.define(
                                            curFiles.push(res.data.src);
                                            imgNum++;
                                            l.find('.pic-cnt-hint').html(imgNum + " / 9");
-                                           l.find(".upload-file-array").val(curFiles.join(","));
+                                           l.find(".upload-file-array").val(JSON.stringify(curFiles));
                                            if(imgNum === 9){
                                                uploadBtn.css({
                                                    display: 'none'
@@ -484,6 +490,9 @@ layui.define(
                            })
                        }
                    );
+               },
+               end: function () {
+                   feedImgTag = false
                }
               }))
          },

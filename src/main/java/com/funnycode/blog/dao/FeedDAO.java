@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 public interface FeedDAO {
     String TABLE_NAME = " feed ";
-    String INSERT_FIELDS = " user_id, data, created_date, type, comment_cnt, forword_cnt ";
+    String INSERT_FIELDS = " user_id, created_date, content, attachment, type, attachment_type, bind_id, comment_cnt, forword_cnt ";
     String SELECT_FIELDS = " id, " + INSERT_FIELDS;
 
     /**
@@ -21,7 +21,7 @@ public interface FeedDAO {
      * @return 影响行数
      */
     @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS,
-            ") values (#{userId},#{data},#{createdDate},#{type},#{commentCnt},#{forwordCnt})"})
+            ") values (#{userId},#{createdDate},#{content},#{attachment},#{type},#{attachmentType},#{bindId},#{commentCnt},#{forwordCnt})"})
     @Options(useGeneratedKeys=true, keyColumn="id")
     int add(Feed feed);
 

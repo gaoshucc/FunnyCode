@@ -83,11 +83,11 @@
     font-size: 13px;
     color: rgba(255, 255, 255, 1);
 }
-#publish{
+#publish, #save{
     background-color: rgba(66, 211, 132, .8);
     cursor: pointer;
 }
-#publish:hover{
+#publish:hover, #save{
     background-color: rgba(66, 211, 132, 1);
 }
 

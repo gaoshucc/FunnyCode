@@ -4552,7 +4552,6 @@ body .layui-util-image .layui-layer-content {
  margin-bottom: 10px;
  background-color: #f0f0f0;
  overflow: hidden;
- /*cursor: move;*/
 }
 .layui-util-image .upload-image .upload-status .success-wrapper {
  height: 80px;
@@ -4580,6 +4579,21 @@ body .layui-util-image .layui-layer-content {
  cursor: pointer;
 }
 
+body .layui-util-comment-func {
+ border: none;
+ background: 0 0
+}
+body .layui-util-comment-func .layui-layer-content {
+ padding: 0;
+ border: 1px solid #e5e9ef;
+ -webkit-box-shadow: 0 11px 12px 0 rgba(106,115,133,0.12);
+ box-shadow: 0 11px 12px 0 rgba(106,115,133,0.12);
+ background-color: #fff;
+ color: #666;
+}
+.layui-util-comment-func .layui-layer-TipsG {
+ display: none
+}
 
 .layui-code {
  position: relative;

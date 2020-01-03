@@ -14,7 +14,6 @@ import com.funnycode.blog.util.RedisKeyUtil;
 import com.funnycode.blog.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,22 +32,20 @@ import java.util.*;
 public class NoteController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    private static final String NAMESPACE = "/user";
+    private final String NAMESPACE = "/user";
+    private final HostHolder hostHolder;
+    private final UserService userService;
+    private final NoteService noteService;
+    private final JedisAdapter jedisAdapter;
+    private final SensitiveService sensitiveService;
 
-    @Autowired
-    private HostHolder hostHolder;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private NoteService noteService;
-
-    @Autowired
-    private JedisAdapter jedisAdapter;
-
-    @Autowired
-    private SensitiveService sensitiveService;
+    public NoteController(HostHolder hostHolder, UserService userService, NoteService noteService, JedisAdapter jedisAdapter, SensitiveService sensitiveService) {
+        this.hostHolder = hostHolder;
+        this.userService = userService;
+        this.noteService = noteService;
+        this.jedisAdapter = jedisAdapter;
+        this.sensitiveService = sensitiveService;
+    }
 
     @GetMapping("/notes/count")
     @ResponseBody
@@ -141,7 +138,7 @@ public class NoteController {
     @GetMapping("/note/{noteId}")
     public String notedetail(Model model, @PathVariable("noteId") @NotBlank Long noteId){
         if(noteId != null && noteId > 0){
-            Note note = userService.getNote(noteId);
+            Note note = noteService.getNote(noteId);
             if(note == null){
                 return "commons/error";
             }
@@ -324,8 +321,14 @@ public class NoteController {
 
     @GetMapping(NAMESPACE + "/note/type")
     @ResponseBody
-    public String getNoteType(){
-        Result result = userService.getNoteType();
-        return JSON.toJSONString(result);
+    public Result getNoteType(){
+        List<NoteType> types = noteService.getNoteType();
+        if(types == null || types.size() == 0){
+            return ResultUtil.error(ExceptionEnum.UNKNOWN_EOR);
+        }else{
+            Map<String, Object> map = new HashMap<>();
+            map.put("types", JSON.toJSONString(types));
+            return ResultUtil.success(map);
+        }
     }
 }

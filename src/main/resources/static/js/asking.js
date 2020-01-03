@@ -7,7 +7,7 @@ layui.use(['layer'], function () {
     document.querySelector("#save").addEventListener("click", save);
 
     /**
-     * 获取手记类型
+     * 获取问题类型
      */
     function getQuestionType(){
         $.ajax({
@@ -28,7 +28,7 @@ layui.use(['layer'], function () {
     }
 
     /**
-     * 保存手记
+     * 保存问题草稿
      */
     let isClickSaveBtn = true;
     function save() {
@@ -47,7 +47,7 @@ layui.use(['layer'], function () {
                         layer.msg("保存成功", {
                             time: 2500
                         },function () {
-                            window.location.href = "/user/mynotes";
+                            window.location.href = "/user/questions";
                         });
                     }else{
                         layer.msg("保存失败", {
@@ -60,7 +60,7 @@ layui.use(['layer'], function () {
         }
     }
     /**
-     * 发布手记
+     * 提问题
      */
     let isClickPublishBtn = true;
     function publish() {
@@ -79,7 +79,7 @@ layui.use(['layer'], function () {
                         layer.msg("发布成功", {
                             time: 2500
                         },function () {
-                            window.location.href = "/user/mynotes";
+                            window.location.href = "/user/questions";
                         });
                     }else{
                         layer.msg("发布失败", {

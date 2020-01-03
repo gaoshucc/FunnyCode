@@ -1,7 +1,5 @@
 package com.funnycode.blog.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.funnycode.blog.dao.FeedDAO;
 import com.funnycode.blog.model.Code;
 import com.funnycode.blog.model.EntityType;
@@ -86,9 +84,8 @@ public class FeedServiceImpl implements FeedService {
         if(feedDAO.removeById(feed.getId()) > 0){
             //转发
             if(feed.getType() == Code.FEED_FORWORD){
-                JSONObject data = JSON.parseObject(feed.getData());
-                jedisAdapter.srem(RedisKeyUtil.getForwordKey(userId), String.valueOf(data.getLong("feedId")));
-                updateForwordCntById(data.getLong("feedId"), -1L);
+                jedisAdapter.srem(RedisKeyUtil.getForwordKey(userId), String.valueOf(feed.getBindId()));
+                updateForwordCntById(feed.getBindId(), -1L);
             }
             //删除评论
             commentService.removeAllComment(EntityType.ENTITY_FEED, feed.getId());

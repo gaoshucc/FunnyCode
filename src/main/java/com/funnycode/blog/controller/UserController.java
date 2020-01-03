@@ -147,10 +147,12 @@ public class UserController {
         long pages = (count/limit)+1;
         Set<String> feedIds = jedisAdapter.zrevrange(key, (page-1)*limit, page*limit);
         List<Feed> feeds = new ArrayList<>();
-        for (String feedId : feedIds) {
-            Feed feed = feedService.getFeedById(Long.parseLong(feedId));
-            if (feed != null) {
-                feeds.add(feed);
+        if(feedIds != null){
+            for (String feedId : feedIds) {
+                Feed feed = feedService.getFeedById(Long.parseLong(feedId));
+                if (feed != null) {
+                    feeds.add(feed);
+                }
             }
         }
         Map<String, Object> map = new HashMap<>();
@@ -164,10 +166,13 @@ public class UserController {
         User user = hostHolder.getUser();
         List<FeedVO> feedVOS = new ArrayList<>();
         FeedVO feedVO;
+        JSONObject map;
         for(Feed feed: feeds){
+            map = new JSONObject();
             feedVO = new FeedVO();
             feedVO.setId(feed.getId());
             feedVO.setCreatedDate(feed.getCreatedDate());
+            feedVO.setAttachmentType(feed.getAttachmentType());
             feedVO.setType(feed.getType());
             feedVO.setUser(userService.getUserVOByUserId(feed.getUserId()));
             feedVO.setForwordCnt(feed.getForwordCnt());
@@ -175,26 +180,29 @@ public class UserController {
             feedVO.setLikeCnt(likeService.getLikeCount(EntityType.ENTITY_FEED, feed.getId()));
             feedVO.setForwordState(jedisAdapter.sismember(RedisKeyUtil.getForwordKey(user.getUserId()), String.valueOf(feed.getId())));
             feedVO.setLikeState(likeService.getLikeStatus1(user.getUserId(), EntityType.ENTITY_FEED, feed.getId()));
+            map.put("content", feed.getContent());
             if(feed.getType() == Code.FEED_ORIGINAL){
-                feedVO.setData(feed.getData());
+                map.put("attachment", feed.getAttachment());
             }else{
-                JSONObject map = JSON.parseObject(feed.getData());
                 //查找被转发的动态
-                Feed forwordFeed = feedService.getFeedById(map.getLong("feedId"));
+                Feed forwordFeed = feedService.getFeedById(feed.getBindId());
                 if(forwordFeed != null){
                     FeedVO forwordFeedVO = new FeedVO();
                     forwordFeedVO.setId(forwordFeed.getId());
                     forwordFeedVO.setCreatedDate(forwordFeed.getCreatedDate());
+                    forwordFeedVO.setAttachmentType(forwordFeed.getAttachmentType());
                     forwordFeedVO.setType(forwordFeed.getType());
                     forwordFeedVO.setUser(userService.getUserVOByUserId(forwordFeed.getUserId()));
-                    forwordFeedVO.setData(forwordFeed.getData());
+                    JSONObject forwordMap = new JSONObject();
+                    forwordMap.put("content", forwordFeed.getContent());
+                    forwordMap.put("attachment", forwordFeed.getAttachment());
+                    forwordFeedVO.setData(JSON.toJSONString(forwordMap));
                     map.put("feed", forwordFeedVO);
                 }else{
                     map.put("feed", null);
                 }
-
-                feedVO.setData(JSON.toJSONString(map));
             }
+            feedVO.setData(JSON.toJSONString(map));
             feedVOS.add(feedVO);
         }
 

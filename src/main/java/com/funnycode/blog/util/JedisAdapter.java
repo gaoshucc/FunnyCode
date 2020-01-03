@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
-import redis.clients.jedis.Tuple;
+import redis.clients.jedis.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,12 +21,30 @@ public class JedisAdapter implements InitializingBean {
     @Value("${redis.host}")
     private String host;
 
+    @Value("${redis.port}")
+    private int port;
+
+    @Value("${redis.timeout}")
+    private int timeout;
+
+    @Value("${redis.password}")
+    private String password;
+
+    @Value("${redis.database}")
+    private int database;
+
     private static final Logger logger = LoggerFactory.getLogger(JedisAdapter.class);
     private JedisPool pool;
 
     @Override
     public void afterPropertiesSet(){
-        pool = new JedisPool(host);
+        JedisPoolConfig config = new JedisPoolConfig();
+        config.setMaxTotal(100);
+        config.setMaxIdle(50);
+        config.setMaxWaitMillis(3000);
+        config.setTestOnBorrow(true);
+        config.setTestOnReturn(true);
+        pool = new JedisPool(config, host, port, timeout, password, database, null);
     }
 
     public long sadd(String key, String value) {

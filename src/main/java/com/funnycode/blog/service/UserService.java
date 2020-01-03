@@ -1,7 +1,5 @@
 package com.funnycode.blog.service;
 
-import com.funnycode.blog.model.Note;
-import com.funnycode.blog.model.Result;
 import com.funnycode.blog.model.User;
 import com.funnycode.blog.model.vo.UserVO;
 
@@ -140,17 +138,4 @@ public interface UserService {
      * @return 更新是否成功
      */
     boolean updateUserSignature(long userId, String signature);
-
-    /**
-     * 查找手记类型
-     * @return Result
-     */
-    Result getNoteType();
-
-    /**
-     * 查找手记
-     * @param noteId 手记编号
-     * @return Note 手记
-     */
-    Note getNote(long noteId);
 }

@@ -62,25 +62,20 @@ layui.use(['layer', 'layedit', 'flow', 'carousel', 'util', 'laytpl'], function (
             layedit.sync(original);
             let formData = new FormData(),
                 content = document.querySelector("#editor-input").value,
+                attachment = '',
                 srcArrInput = document.querySelector("#upload-file-array");
             //若是图片动态，则获取图片信息
             if(srcArrInput && !isNullStr(srcArrInput.value)){
-                console.log(srcArrInput.value);
-                let srcArr = srcArrInput.value.split(","),
-                    feedImgContent = "<span class='feed-item-content-img-box'>";
-                for(let i=0; i<srcArr.length; i++){
-                    feedImgContent = feedImgContent + "<img src='"+ srcArr[i] +"' class='feed-item-content-img' title='查看图片'>";
-                }
-                feedImgContent = feedImgContent + "</span>";
-                content = content + feedImgContent;
+                attachment = srcArrInput.value;
             }
-            if(content == null || content.length <= 0){
+            if(content == null && content.length <= 0 && attachment === '' && attachment.length <= 0){
                 layer.msg("动态内容不能为空", {
                     time: 2500
                 });
                 return;
             }
             formData.append("content", content);
+            formData.append("attachment", attachment);
             let index = layer.load(1, {
                 shade: [0.4,'#000'] //0.1透明度的白色背景
             });
@@ -108,6 +103,81 @@ layui.use(['layer', 'layedit', 'flow', 'carousel', 'util', 'laytpl'], function (
         }
     });
 
+    let currentUserId = document.querySelector("#current-user").value, content;
+    $("#feeds-block").on("click", ".feed-func", function () {
+        let ownerId = $(this).attr("data-owner-id"),
+            feedId = $(this).attr("data-id");
+        if(ownerId === currentUserId){
+            content = "<a class='feed-func-point delete-feed' data-id='"+ feedId +"'>删除</a>";
+        }else{
+            content = "<a class='feed-func-point report-feed' data-id='"+ feedId +"'>举报</a>";
+        }
+        layer.tips(content, this, {
+            id: 'feed-func-point-'+feedId,
+            tipsMore: true,
+            tips: 2,
+            time: 0,
+            skin: 'layui-box layui-util-comment-func',
+            shade: false,
+            success: function (layero, index) {
+                $('body').click(function(e) {
+                    /**
+                     * #feed-func-point-{feedId} : 动态功能tips的id，避免重复弹出相同tips
+                     * #feed-func-{feedId} : 动态功能按钮的id，在点击另一评论功能按钮时，可及时关闭其它弹窗
+                     */
+                    /*!$(e.target).isChildAndSelfOf('#feed-func-point-'+feedId) && */
+                    if(!$(e.target).isChildAndSelfOf('#feed-func-'+feedId)){
+                        layer.close(index);
+                    }
+                });
+            }
+        });
+    });
+
+    /**
+     * 删除动态
+     */
+    $(document).on("click", ".delete-feed", function () {
+        let feedId = $(this).attr("data-id");
+        $.ajax({
+            type: "POST",
+            url: PRO_NAME + "/user/feed/delete",
+            data: {"feedId": feedId},
+            dataType: "json",
+            success: function (data) {
+                if(data.code === REQ_SUCC){
+                    $("#feed-item-"+feedId).remove();
+                    layer.msg("删除动态成功", {
+                        time: 2500
+                    });
+                }else{
+                    layer.msg("删除评论失败，请刷新重试", {
+                        time: 2500
+                    });
+                }
+            },
+            async: true
+        });
+
+    });
+
+    /**
+     * 举报动态
+     */
+    $(document).on("click", ".report-feed", function () {
+        let feedId = $(this).attr("data-id");
+        layer.open({
+            type: 2,
+            title: false,
+            shadeClose: true,
+            shade: 0.4,
+            area: ['420px', '300px'],
+            content: '/user/report/'+ ENTITY_FEED + "/" + feedId,
+            end: function () {
+            }
+        });
+    });
+
     flow.load({
         elem: '#feeds-block',
         scrollElem: document,
@@ -125,25 +195,21 @@ layui.use(['layer', 'layedit', 'flow', 'carousel', 'util', 'laytpl'], function (
                 dataType: "json",
                 success: function (data) {
                     if(data.code === REQ_SUCC && data.data != null && data.data.feeds != null){
-                        let lis = [], currentUser = document.querySelector("#current-user").value,
-                            self, flag, //self是否为用户本人动态，flag判断被转发动态是否为空（已被删除）
+                        let lis = [], flag, attachment, //flag判断被转发动态是否为空（已被删除），attachment为附带内容
                             forwordFeed, forwordFeedCreateDate, forwordFeedContent; //被转发动态信息
                         layui.each(data.data.feeds, function(index, item){
-                            let createTime = util.timeAgo(item.createdDate, false);
-                            let map = JSON.parse(item.data);
-                            self = parseInt(currentUser) === parseInt(item.user.userId);
-                            let renderData,
-                                template;
+                            let createTime = util.timeAgo(item.createdDate, false),
+                                map = JSON.parse(item.data),
+                                renderData, template;  //渲染数据，渲染模板
                             if(item.type === 1){
+                                attachment = (map.attachment && map.attachment.length>0) ? JSON.parse(map.attachment) : null;
                                 renderData = { //数据
-                                    self: self,
-                                    type: item.type,
                                     feed: item,
+                                    type: item.type,
                                     createTime: createTime,
+                                    attachment: attachment,
+                                    attachmentType: item.attachmentType,
                                     map: map,
-                                    forwordCntId: "forword-cnt-"+item.id,
-                                    commentCntId: "comment-cnt-"+item.id,
-                                    likeCntId: "like-cnt-"+item.id,
                                     forwordStateCla: item.forwordState === true ? "has-forword" : "no-forword",
                                     forwordState: item.forwordState === true ? 1 : -1,
                                     likeStateCla: item.likeState === true ? "has-like" : "no-like",
@@ -155,28 +221,28 @@ layui.use(['layer', 'layedit', 'flow', 'carousel', 'util', 'laytpl'], function (
                                     flag = true;
                                     forwordFeed = map.feed;
                                     forwordFeedCreateDate = util.timeAgo(map.feed.createdDate, false);
-                                    forwordFeedContent = JSON.parse(map.feed.data).content;
+                                    forwordFeedContent = JSON.parse(map.feed.data);
+                                    attachment = (forwordFeedContent.attachment && forwordFeedContent.attachment.length>0) ? JSON.parse(forwordFeedContent.attachment) : null;
                                 }else{
                                     flag = false;
-                                    forwordFeed = "";
-                                    forwordFeedCreateDate = "";
+                                    forwordFeed = null;
+                                    forwordFeedCreateDate = null;
                                     forwordFeedContent = "该条动态已被删除 (ﾒﾟДﾟ)ﾒ";
+                                    attachment = null;
                                 }
                                 renderData = { //数据
-                                    self: self,
-                                    type: item.type,
                                     feed: item,
+                                    type: item.type,
                                     createTime: createTime,
                                     content: map.content,
+                                    attachmentType: item.attachmentType,
 
                                     flag: flag,
                                     forword: forwordFeed,
                                     forwordCreateTime: forwordFeedCreateDate,
                                     forwordContent: forwordFeedContent,
-
+                                    forwordAttachment: attachment,
                                     forwordCntId: "forword-cnt-"+item.id,
-                                    commentCntId: "comment-cnt-"+item.id,
-                                    likeCntId: "like-cnt-"+item.id,
                                     likeStateCla: item.likeState === true ? "has-like" : "no-like",
                                     likeState: item.likeState === true ? 1 : -1
                                 };
@@ -192,6 +258,9 @@ layui.use(['layer', 'layedit', 'flow', 'carousel', 'util', 'laytpl'], function (
                             photos: '.feed-item-content-img-box',
                             anim: 5
                         });
+                    }else{
+                        let notesBox = document.querySelector("#feeds-block");
+                        notesBox.innerHTML = "<div id='no-content-box'><span id='no-content-icon'><svg class='icon' aria-hidden='true'><use xlink:href='#icon-kong'></use></svg></span><span id='no-content'>空空如也，用户暂无动态</span></div>";
                     }
                 },
                 async: true
@@ -199,59 +268,3 @@ layui.use(['layer', 'layedit', 'flow', 'carousel', 'util', 'laytpl'], function (
         }
     });
 });
-
-/*
-    let imgBar = document.querySelector("#img-bar"),
-        uploadFeedImg = document.querySelector("#feed-img-input");
-    uploadFeedImg.addEventListener("change", function (e) {
-        setImagePreview(this, imgBar);
-    });
-
-    let imgNum = 0, curFiles = [];      //存放上传图片列表
-    function setImagePreview(uploadFeedImgEle, imgBar) {
-        for(let i=0; i<9; i++){
-            if(curFiles.length >= 9){
-                layer.msg("最多只能上传9张图片哦", {
-                    time: 2500
-                });
-                return;
-            }
-            if (uploadFeedImgEle.files && uploadFeedImgEle.files[i]) {
-                let imgObjPreview = new Image();
-                imgObjPreview.src = getImgUrl(uploadFeedImgEle.files[i]);
-                let newImg = document.createElement("span");    //图片栏添加图片预览
-                newImg.classList.add("delete-img-btn");
-                newImg.title = "点击删除该图片";
-                newImg.appendChild(imgObjPreview);
-                imgBar.insertBefore(newImg, imgBar.firstElementChild);
-                newImg.onclick = function (e) {
-                    removeImg(this, uploadFeedImgEle.files[i].name);
-                };
-                curFiles.push(uploadFeedImgEle.files[i]);
-                imgNum++;
-            }
-        }
-    }
-    //移除图片
-    function removeImg(ele, filename) {
-        let imgBar = document.querySelector("#img-bar");
-        imgBar.removeChild(ele);
-        curFiles = curFiles.filter(function(file) {
-            return file.name !== filename;
-        });
-        console.log(curFiles);
-    }
-    //获取input[file]图片的url
-    function getImgUrl(file) {
-        let url;
-        let agent = navigator.userAgent;
-        if (agent.indexOf("MSIE")>=1) {
-            url = file.value;
-        } else if(agent.indexOf("Firefox")>0) {
-            url = window.URL.createObjectURL(file);
-        } else if(agent.indexOf("Chrome")>0) {
-            url = window.URL.createObjectURL(file);
-        }
-        return url;
-    }
-    */

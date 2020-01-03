@@ -38,7 +38,7 @@
     </select>
 
     <!--获取用户某一状态的所有手记-->
-    <select id="listUserNotesByStatus" resultType="com.funnycode.blog.model.Note">
+    <select id="findAllByUserIdAndStatus" resultType="com.funnycode.blog.model.Note">
         SELECT
         <include refid="selectFields"/>
         FROM

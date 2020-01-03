@@ -70,9 +70,10 @@ public class Code {
      * 2：图片
      * 3：视频
      */
-    public static final int FEED_CONTENT_NONE = 1;
-    public static final int FEED_CONTENT_IMG = 2;
-    public static final int FEED_CONTENT_VIDEO = 3;
+    public static final int FEED_ATTACH_NONE = 1;
+    public static final int FEED_ATTACH_IMG = 2;
+    public static final int FEED_ATTACH_VIDEO = 3;
+    public static final int FEED_ATTACH_NOTE = 4;
 
     /**
      * 评论

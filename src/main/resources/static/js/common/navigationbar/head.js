@@ -9,18 +9,19 @@ layui.use(['layer', 'flow', 'util', 'laytpl', 'element'], function () {
     checkLogin();
 
     //下滚导航栏吸顶
-    let t= 42, p = 0,
-        header = document.querySelector("#header");   // 目前监听的是整个body的滚动条距离
+    let p = 0, header = document.querySelector("#header"),   // 目前监听的是整个body的滚动条距离
+        rect = header.getBoundingClientRect(),//获得页面中导航条相对于浏览器视窗的位置
+        inser = document.createElement("div");
+    header.parentNode.replaceChild(inser,header);
+    inser.appendChild(header);
+    inser.style.height = rect.height + "px";
     window.addEventListener("scroll", function (e) {
-        p = $('body, html').scrollTop();
-        if(t<p){   //下滚
-            console.log("下滚");
+        p = document.body.scrollTop||document.documentElement.scrollTop;
+        if(p > 0){   //下滚
             header.classList.add("menu-active");
         }else{  //上滚
-            console.log("上滚");
             header.classList.remove("menu-active");
         }
-        setTimeout(function(){t = p;},0);
     });
 
     /**
@@ -288,12 +289,11 @@ layui.use(['layer', 'flow', 'util', 'laytpl', 'element'], function () {
                                 },
                                 dataType: "json",
                                 success: function (data) {
-                                    if(data.code === REQ_SUCC && data.data !== undefined && data.data.feeds !== undefined){
+                                    if(data.code === REQ_SUCC && data.data != null && data.data.feeds != null){
                                         let lis = [];
                                         layui.each(data.data.feeds, function(index, item){
-                                            let createTime = util.timeAgo(item.createdDate, false);
-                                            let map = JSON.parse(item.data);
-                                            let title = "时间："+ createTime;
+                                            let createTime = util.timeAgo(item.createdDate, false),
+                                                title = "时间："+ createTime;
                                             if(item.type === 1){
                                                 lis.push("<li data-id='"+ item.id +"' title='"+ title +"'><a href='/user/"+ item.userId +"'>"+ map.nickname +"</a>发布了新动态</li>");
                                             }else if(item.type === 2){

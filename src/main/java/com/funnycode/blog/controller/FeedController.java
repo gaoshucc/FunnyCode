@@ -13,7 +13,7 @@ import com.funnycode.blog.service.*;
 import com.funnycode.blog.util.JedisAdapter;
 import com.funnycode.blog.util.RedisKeyUtil;
 import com.funnycode.blog.util.ResultUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,29 +29,25 @@ import java.util.*;
 @Valid
 @Controller
 public class FeedController {
-    @Autowired
-    private HostHolder hostHolder;
+    private final HostHolder hostHolder;
+    private final JedisAdapter jedisAdapter;
+    private final FeedService feedService;
+    private final SensitiveService sensitiveService;
+    private final MessageEventProducer eventProducer;
+    private final UserService userService;
+    private final CommentService commentService;
+    private final LikeService likeService;
 
-    @Autowired
-    private JedisAdapter jedisAdapter;
-
-    @Autowired
-    private FeedService feedService;
-
-    @Autowired
-    private SensitiveService sensitiveService;
-
-    @Autowired
-    private MessageEventProducer eventProducer;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private CommentService commentService;
-
-    @Autowired
-    private LikeService likeService;
+    public FeedController(FeedService feedService, HostHolder hostHolder, JedisAdapter jedisAdapter, SensitiveService sensitiveService, MessageEventProducer eventProducer, UserService userService, CommentService commentService, LikeService likeService) {
+        this.feedService = feedService;
+        this.hostHolder = hostHolder;
+        this.jedisAdapter = jedisAdapter;
+        this.sensitiveService = sensitiveService;
+        this.eventProducer = eventProducer;
+        this.userService = userService;
+        this.commentService = commentService;
+        this.likeService = likeService;
+    }
 
     @GetMapping("/user/tofeed")
     public String toFeed(Model model){
@@ -61,29 +57,27 @@ public class FeedController {
 
     @PostMapping("/user/feed/original")
     @ResponseBody
-    public Result addOriginalFeed(@RequestParam("content") @NotBlank(message = "动态内容不能为空") String content) throws Exception {
-        /*MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
-        StringBuilder imgContent = new StringBuilder();
-        List<MultipartFile> files = multipartRequest.getFiles("fileArray");
-        if(files.size() > 0){
-            imgContent.append("<span class='feed-item-content-img-box'>");
-            for(MultipartFile file: files){
-                String url = QiniuUploadUtil.uploadFile(file, null);
-                imgContent.append("<img src='").append(url).append("' class='feed-item-content-img' title='查看图片'>");
-            }
-            imgContent.append("</span>");
-        }*/
+    public Result addOriginalFeed(@RequestParam("content") String content,
+                                  @RequestParam("attachment") String attachment) throws Exception {
+        if(StringUtils.isBlank(content) && StringUtils.isBlank(attachment)){
+            return ResultUtil.error(ExceptionEnum.PARAM_FAIL);
+        }
         User user = hostHolder.getUser();
         Feed feed = new Feed();
         feed.setUserId(user.getUserId());
-        feed.setType(Code.FEED_ORIGINAL);
         feed.setCreatedDate(new Date());
+        feed.setContent(content);
+        feed.setAttachment(attachment);
+        if(StringUtils.isBlank(attachment)){
+            feed.setAttachmentType(Code.FEED_ATTACH_NONE);
+        }else{
+            feed.setAttachmentType(Code.FEED_ATTACH_IMG);
+        }
+        feed.setType(Code.FEED_ORIGINAL);
+        feed.setBindId(0L);
         feed.setForwordCnt(0L);
         feed.setCommentCnt(0L);
-        Map<String, Object> map = new HashMap<>();
-        map.put("nickname", user.getNickname());
-        map.put("content", content);
-        feed.setData(JSON.toJSONString(map));
+
         if(feedService.addOriginalFeed(feed)){
             eventProducer.sendEvent(new EventModel(EventType.FEED)
                     .setActorId(user.getUserId())
@@ -104,19 +98,19 @@ public class FeedController {
         if(beForword == null){
             return ResultUtil.error(ExceptionEnum.PARAM_FAIL);
         }
+
         Feed feed = new Feed();
         feed.setUserId(user.getUserId());
-        feed.setType(Code.FEED_FORWORD);
         feed.setCreatedDate(new Date());
+        feed.setContent(content);
+        feed.setAttachment(null);
+        feed.setAttachmentType(Code.FEED_ATTACH_NONE);
+        feed.setType(Code.FEED_FORWORD);
+        feed.setBindId(beForword.getId());
         feed.setForwordCnt(0L);
         feed.setCommentCnt(0L);
-        Map<String, Object> map = new HashMap<>();
-        map.put("nickname", user.getNickname());
-        map.put("content", sensitiveService.filter(content));
-        map.put("feedId", feedId);
-        feed.setData(JSON.toJSONString(map));
-        boolean ret = feedService.addForwordFeed(feed, user.getUserId(), feedId);
-        if(ret){
+
+        if(feedService.addForwordFeed(feed, user.getUserId(), beForword.getId())){
             eventProducer.sendEvent(new EventModel(EventType.FEED)
                     .setActorId(user.getUserId())
                     .setEntityType(EntityType.ENTITY_FEED)
@@ -154,7 +148,7 @@ public class FeedController {
                                 @RequestParam("feedId") @NotBlank(message = "被评论者不存在") Long feedId,
                                 @RequestParam("parentId")Long parentId){
         Comment comment = new Comment(hostHolder.getUser().getUserId(),
-                EntityType.ENTITY_FEED, feedId, sensitiveService.filter(content), new Date(), 1, parentId);
+                EntityType.ENTITY_FEED, feedId, sensitiveService.filter(content), new Date(), Code.NORMAL_COMMENT, parentId);
         boolean ret = commentService.addComment(comment);
         if(ret){
             Feed feed = feedService.getFeedById(feedId);
@@ -183,10 +177,10 @@ public class FeedController {
     @ResponseBody
     public Result getFeedsBrief(@RequestParam(value = "page", defaultValue = "0")Long page,
                                 @RequestParam(value = "limit", defaultValue = "6")Long limit){
-        Long localUserId = hostHolder.getUser().getUserId();
+        long localUserId = hostHolder.getUser().getUserId();
         String key = RedisKeyUtil.getTimelineKey(localUserId);
-        long count = jedisAdapter.zcard(key);
-        long pages = (count/limit)+1;
+        long count = jedisAdapter.zcard(key),
+             pages = (count/limit)+1;
         Set<String> feedIds = jedisAdapter.zrevrange(key, (page-1)*limit, page*limit);
         List<Feed> feeds = new ArrayList<>();
         for (String feedId : feedIds) {
@@ -206,10 +200,10 @@ public class FeedController {
     @ResponseBody
     public Result getFeedsDetail(@RequestParam(value = "page", defaultValue = "0")Long page,
                                    @RequestParam(value = "limit", defaultValue = "6")Long limit){
-        Long localUserId = hostHolder.getUser().getUserId();
+        long localUserId = hostHolder.getUser().getUserId();
         String key = RedisKeyUtil.getTimelineKey(localUserId);
-        long count = jedisAdapter.zcard(key);
-        long pages = (count/limit)+1;
+        long count = jedisAdapter.zcard(key),
+             pages = (count/limit)+1;
         Set<String> feedIds = jedisAdapter.zrevrange(key, (page-1)*limit, page*limit);
         List<Feed> feeds = new ArrayList<>();
         for (String feedId : feedIds) {
@@ -229,10 +223,13 @@ public class FeedController {
         User user = hostHolder.getUser();
         List<FeedVO> feedVOS = new ArrayList<>();
         FeedVO feedVO;
+        JSONObject map;
         for(Feed feed: feeds){
+            map = new JSONObject();
             feedVO = new FeedVO();
             feedVO.setId(feed.getId());
             feedVO.setCreatedDate(feed.getCreatedDate());
+            feedVO.setAttachmentType(feed.getAttachmentType());
             feedVO.setType(feed.getType());
             feedVO.setUser(userService.getUserVOByUserId(feed.getUserId()));
             feedVO.setForwordCnt(feed.getForwordCnt());
@@ -240,26 +237,29 @@ public class FeedController {
             feedVO.setLikeCnt(likeService.getLikeCount(EntityType.ENTITY_FEED, feed.getId()));
             feedVO.setForwordState(jedisAdapter.sismember(RedisKeyUtil.getForwordKey(user.getUserId()), String.valueOf(feed.getId())));
             feedVO.setLikeState(likeService.getLikeStatus1(user.getUserId(), EntityType.ENTITY_FEED, feed.getId()));
+            map.put("content", feed.getContent());
             if(feed.getType() == Code.FEED_ORIGINAL){
-                feedVO.setData(feed.getData());
+                map.put("attachment", feed.getAttachment());
             }else{
-                JSONObject map = JSON.parseObject(feed.getData());
                 //查找被转发的动态
-                Feed forwordFeed = feedService.getFeedById(map.getLong("feedId"));
+                Feed forwordFeed = feedService.getFeedById(feed.getBindId());
                 if(forwordFeed != null){
                     FeedVO forwordFeedVO = new FeedVO();
                     forwordFeedVO.setId(forwordFeed.getId());
                     forwordFeedVO.setCreatedDate(forwordFeed.getCreatedDate());
+                    forwordFeedVO.setAttachmentType(forwordFeed.getAttachmentType());
                     forwordFeedVO.setType(forwordFeed.getType());
                     forwordFeedVO.setUser(userService.getUserVOByUserId(forwordFeed.getUserId()));
-                    forwordFeedVO.setData(forwordFeed.getData());
+                    JSONObject forwordMap = new JSONObject();
+                    forwordMap.put("content", forwordFeed.getContent());
+                    forwordMap.put("attachment", forwordFeed.getAttachment());
+                    forwordFeedVO.setData(JSON.toJSONString(forwordMap));
                     map.put("feed", forwordFeedVO);
                 }else{
                     map.put("feed", null);
                 }
-
-                feedVO.setData(JSON.toJSONString(map));
             }
+            feedVO.setData(JSON.toJSONString(map));
             feedVOS.add(feedVO);
         }
 

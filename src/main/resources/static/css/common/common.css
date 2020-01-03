@@ -51,3 +51,18 @@ body {
     border-radius: 4px;
     background: rgba(196, 196, 196, 1);
 }
+/*解决滚动条出现造成页面晃动*/
+html{
+    overflow-y: scroll;
+}
+:root {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+:root body {
+    position: absolute;
+}
+body {
+    width: 100vw;
+    overflow: hidden;
+}

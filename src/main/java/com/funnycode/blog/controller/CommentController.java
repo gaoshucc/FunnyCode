@@ -13,7 +13,6 @@ import com.funnycode.blog.service.SensitiveService;
 import com.funnycode.blog.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,21 +33,19 @@ import java.util.Map;
 public class CommentController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentController.class);
+    private final HostHolder hostHolder;
+    private final EventProducer eventProducer;
+    private final NoteService noteService;
+    private final CommentService commentService;
+    private final SensitiveService sensitiveService;
 
-    @Autowired
-    private HostHolder hostHolder;
-
-    @Autowired
-    private EventProducer eventProducer;
-
-    @Autowired
-    private NoteService noteService;
-
-    @Autowired
-    private CommentService commentService;
-
-    @Autowired
-    private SensitiveService sensitiveService;
+    public CommentController(HostHolder hostHolder, EventProducer eventProducer, NoteService noteService, CommentService commentService, SensitiveService sensitiveService) {
+        this.hostHolder = hostHolder;
+        this.eventProducer = eventProducer;
+        this.noteService = noteService;
+        this.commentService = commentService;
+        this.sensitiveService = sensitiveService;
+    }
 
     @GetMapping("/user/note/reply/{noteId}/{bereplyId}")
     public String toNoteReply(Model model, @PathVariable("noteId") Long noteId,
@@ -115,7 +112,7 @@ public class CommentController {
     @ResponseBody
     public Result deleteComment(@RequestParam("commentId")Long commentId){
         Comment comment = commentService.getCommentById(commentId);
-        if(comment == null || !isCommentOwner(comment)){
+        if(comment == null || !isCommentOwner(comment) || comment.getStatus() == Code.DELETE_COMMENT){
             return ResultUtil.error(ExceptionEnum.PARAM_FAIL);
         }
         boolean ret = commentService.updateCommentDeleted(comment);
